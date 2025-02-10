@@ -1,0 +1,28 @@
+{
+  "slides": [
+    {
+      "id": "1",
+      "base64": "SGVsbG8gd29ybGQ=",
+      "thumbnail": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC...",
+      "saved_at": "2025-02-10T12:00:00Z",
+      "text_content": "This is the first slide content.",
+      "tags": {
+        "project": "Marketing Campaign",
+        "topic": "Social Media Strategy",
+        "subtopic": "Instagram Ads"
+      }
+    },
+    {
+      "id": "2",
+      "base64": "U2xpZGUgQmFzZTY0IERhdGE=",
+      "thumbnail": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC...",
+      "saved_at": "2025-02-10T12:30:00Z",
+      "text_content": "Key points for the meeting.",
+      "tags": {
+        "project": "Product Launch",
+        "topic": "Event Planning",
+        "subtopic": "Venue Selection"
+      }
+    }
+  ]
+}

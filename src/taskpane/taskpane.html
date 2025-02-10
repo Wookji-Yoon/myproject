@@ -10,7 +10,7 @@
     <title>Contoso Task Pane Add-in</title>
 
     <!-- Office JavaScript API -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script>
 
     <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
     <link
@@ -46,13 +46,19 @@
     </section>
     <main id="app-body" class="ms-welcome__main" style="display: none">
       <div class="padding">
-        <!-- TODO1: Create the insert-image button. -->
+        <!-- Microsoft Graph 관련 버튼들 -->
+        <button class="ms-Button" id="sign-in">Sign In</button><br /><br />
+        <button class="ms-Button" id="create-folder">Create Folder</button><br /><br />
+        <button class="ms-Button" id="create-powerpoint">Create PowerPoint</button><br /><br />
+        <button class="ms-Button" id="create-json">Create JSON</button><br /><br />
+        <button class="ms-Button" id="read-json">Read JSON</button><br /><br />
+        <button class="ms-Button" id="export-selected-slide">Export Selected Slide</button><br /><br />
+        <button class="ms-Button" id="insert-after-selected-slide">Insert After Selected Slide</button><br /><br />
+        <!-- 다른 버튼들 주석 처리 -->
+        <!-- 
         <button class="ms-Button" id="insert-image">Insert Image</button><br /><br />
-        <!-- TODO3: Create the insert-text button. -->
         <button class="ms-Button" id="insert-text">Insert Text</button><br /><br />
-        <!-- TODO4: Create the get-slide-metadata button. -->
         <button class="ms-Button" id="get-slide-metadata">Get Slide Metadata</button><br /><br />
-        <!-- TODO5: Create the add-slides and go-to-slide buttons. -->
         <button class="ms-Button" id="add-slides">Add Slides</button><br /><br />
         <button class="ms-Button" id="go-to-first-slide">Go to First Slide</button><br /><br />
         <button class="ms-Button" id="go-to-next-slide">Go to Next Slide</button><br /><br />
@@ -64,14 +70,24 @@
         <br /><br />
         <button class="ms-Button" id="insert-all">Insert All Slide</button>
         <button class="ms-Button" id="insert-target">Insert Target Slide</button>
+        -->
+        <!--
+        <section>
+          <p>Select a PowerPoint presentation from which to insert slides</p>
+          <form>
+            <input type="file" id="file" />
+          </form>
+        </section>
+        -->
+        <section>
+          <h3>"TOPIC" 태그 추가</h3>
+          <form id="tag-form">
+            <input type="text" id="tag-value" placeholder="태그 값" required />
+            <button type="submit" class="ms-Button">태그 추가</button>
+          </form>
+        </section>
       </div>
     </main>
-    <section>
-      <p>Select a PowerPoint presentation from which to insert slides</p>
-      <form>
-        <input type="file" id="file" />
-      </form>
-    </section>
 
     <section id="display-msg" class="ms-welcome__main">
       <div class="padding">
