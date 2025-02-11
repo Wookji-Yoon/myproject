@@ -1,7 +1,14 @@
-/* global document, Office */
+/* global document, Office, console*/
 
-import { signIn, createFolder, createPowerPointFile, createJsonFile, readJsonFile } from "./graphService";
-import { addSlideTag, exportSelectedSlideAsBase64, insertAfterSelectedSlide } from "./functions";
+import {
+  signIn,
+  createFolder,
+  createPowerPointFile,
+  createJsonFile,
+  readJsonFile,
+  updateJsonFile,
+} from "./graphService";
+import { addSlideTag, createJsonData, exportSelectedSlideAsBase64, insertAfterSelectedSlide } from "./functions";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint && info.platform === Office.PlatformType.PC) {
@@ -43,6 +50,7 @@ Office.onReady((info) => {
       e.preventDefault();
       try {
         const base64 = await exportSelectedSlideAsBase64();
+
         setMessage(`Exported Slide Base64: ${base64.substring(0, 50)}...`);
       } catch (error) {
         setMessage(`Error exporting slide: ${error.message}`);
@@ -51,7 +59,12 @@ Office.onReady((info) => {
 
     document.getElementById("insert-after-selected-slide").addEventListener("click", async (e) => {
       e.preventDefault();
-      await insertAfterSelectedSlide();
+      const result = await readJsonFile();
+      const slides = result.slides;
+      console.log(typeof slides);
+      console.log(slides[slides.length - 1]);
+      const lastSlideId = slides[slides.length - 1].id;
+      await insertAfterSelectedSlide(slides, lastSlideId);
       setMessage("Inserted after selected slide!");
     });
 
@@ -59,8 +72,21 @@ Office.onReady((info) => {
       e.preventDefault();
       const key = "TOPIC";
       const value = document.getElementById("tag-value").value;
-      await addSlideTag(key, value);
-      setMessage(`태그 "${value}" 추가 완료!`);
+      const userTags = {
+        [key]: value,
+      };
+      try {
+        const result = await exportSelectedSlideAsBase64(userTags);
+        console.log(result);
+        const jsonData = createJsonData(result);
+        console.log(jsonData);
+        await updateJsonFile(jsonData);
+        setMessage(`Exported Slide Base64: ${result.slide.substring(0, 50)}...
+        Thumbnail Base64: ${result.thumbnail.substring(0, 50)}...
+        Tags: ${JSON.stringify(result.tags)}`);
+      } catch (error) {
+        setMessage(`Error exporting slide: ${error.message}`);
+      }
     });
   }
 });

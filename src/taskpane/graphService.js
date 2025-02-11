@@ -119,7 +119,7 @@ async function createJsonFile() {
   const client = await getGraphClient();
 
   try {
-    // 'myapp' 폴더에 'presentation.json' 파일 생성
+    // 기본 JSON 구조를 exportSelectedSlideAsBase64의 출력 형식과 일치시킴
     await client.api("/me/drive/root:/myapp/presentation.json:/content").put(
       new Blob(
         [
@@ -127,27 +127,13 @@ async function createJsonFile() {
             {
               slides: [
                 {
-                  id: "1",
-                  base64: "SGVsbG8gd29ybGQ=",
-                  thumbnail: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC...",
-                  saved_at: "2025-02-10T12:00:00Z",
-                  text_content: "This is the first slide content.",
+                  id: new Date().getTime().toString(),
+                  base64: "SGVsbG8gd29ybGQ=", // 예시 base64
+                  thumbnail: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC...", // 예시 썸네일
+                  saved_at: new Date().toISOString(),
+                  text_content: "Initial slide content",
                   tags: {
-                    project: "Marketing Campaign",
-                    topic: "Social Media Strategy",
-                    subtopic: "Instagram Ads",
-                  },
-                },
-                {
-                  id: "2",
-                  base64: "U2xpZGUgQmFzZTY0IERhdGE=",
-                  thumbnail: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC...",
-                  saved_at: "2025-02-10T12:30:00Z",
-                  text_content: "Key points for the meeting.",
-                  tags: {
-                    project: "Product Launch",
-                    topic: "Event Planning",
-                    subtopic: "Venue Selection",
+                    topic: "Initial Topic",
                   },
                 },
               ],
@@ -192,4 +178,24 @@ async function readJsonFile() {
   }
 }
 
-export { signIn, createFolder, createPowerPointFile, createJsonFile, readJsonFile };
+async function updateJsonFile(jsonData) {
+  const client = await getGraphClient();
+
+  try {
+    // 기존 JSON 파일 읽기
+    const existingData = await readJsonFile();
+
+    // 새 슬라이드 추가
+    existingData.slides.push(jsonData.slides[0]);
+
+    // Microsoft Graph API를 사용하여 파일 업데이트
+    await client.api("/me/drive/root:/myapp/presentation.json:/content").put(JSON.stringify(existingData, null, 2));
+
+    console.log("JSON file updated successfully");
+  } catch (error) {
+    console.error("Error updating JSON file:", error);
+    throw error;
+  }
+}
+
+export { signIn, createFolder, createPowerPointFile, createJsonFile, readJsonFile, updateJsonFile };
