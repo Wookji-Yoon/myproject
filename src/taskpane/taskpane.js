@@ -15,6 +15,12 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
 
+    // 네비게이션 초기화
+    initializeNavigation();
+
+    // 기본 페이지 표시
+    showPage("main-page");
+
     // Microsoft Graph 관련 이벤트 핸들러에 tryCatch 적용
     document.getElementById("sign-in").onclick = () =>
       tryCatch(async () => {
@@ -43,7 +49,8 @@ Office.onReady((info) => {
     document.getElementById("read-json").onclick = () =>
       tryCatch(async () => {
         const jsonData = await readJsonFile();
-        setMessage(`JSON file read successfully! Data: ${JSON.stringify(jsonData)}`);
+        displaySlides(jsonData.slides);
+        setMessage("JSON 파일을 성공적으로 읽었습니다!");
       });
 
     document.getElementById("export-selected-slide").addEventListener("click", async (e) => {
@@ -91,6 +98,40 @@ Office.onReady((info) => {
   }
 });
 
+function initializeNavigation() {
+  const buttons = document.querySelectorAll(".nav-button");
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const pageId = button.dataset.page;
+      showPage(pageId);
+    });
+  });
+}
+
+function showPage(pageId) {
+  // 모든 페이지 숨기기
+  const pages = document.querySelectorAll(".page");
+  pages.forEach((page) => {
+    page.style.display = "none";
+  });
+
+  // 선택한 페이지만 보이기
+  const selectedPage = document.getElementById(pageId);
+  if (selectedPage) {
+    selectedPage.style.display = "block";
+  }
+
+  // 활성 버튼 스타일 변경
+  const buttons = document.querySelectorAll(".nav-button");
+  buttons.forEach((button) => {
+    if (button.dataset.page === pageId) {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
+  });
+}
+
 // setMessage 함수 추가
 function setMessage(message) {
   document.getElementById("message").innerText = message;
@@ -110,6 +151,60 @@ async function tryCatch(callback) {
   } catch (error) {
     setMessage("Error: " + error.toString());
   }
+}
+
+function displaySlides(slides) {
+  const container = document.getElementById("slides-container");
+  container.innerHTML = "";
+
+  slides.forEach((slide) => {
+    const slideElement = document.createElement("div");
+    slideElement.className = "slide-item";
+
+    // Insert 버튼 추가
+    const insertButton = document.createElement("button");
+    insertButton.className = "insert-button";
+    insertButton.textContent = "Insert";
+    insertButton.onclick = async () => {
+      try {
+        await insertAfterSelectedSlide(slides, slide.id);
+        setMessage("슬라이드가 성공적으로 삽입되었습니다!");
+      } catch (error) {
+        setMessage(`슬라이드 삽입 중 오류 발생: ${error.message}`);
+      }
+    };
+    slideElement.appendChild(insertButton);
+
+    // ID 표시
+    const idElement = document.createElement("div");
+    idElement.className = "slide-info";
+    idElement.textContent = `슬라이드 ID: ${slide.id}`;
+    slideElement.appendChild(idElement);
+
+    // 썸네일 이미지 표시
+    const thumbnailImg = document.createElement("img");
+    thumbnailImg.className = "slide-thumbnail";
+    thumbnailImg.src = `data:image/png;base64,${slide.thumbnail}`;
+    thumbnailImg.alt = "슬라이드 썸네일";
+    slideElement.appendChild(thumbnailImg);
+
+    // 태그 표시
+    if (slide.tags) {
+      const tagsContainer = document.createElement("div");
+      tagsContainer.className = "tag-list";
+
+      Object.entries(slide.tags).forEach(([key, value]) => {
+        const tagElement = document.createElement("span");
+        tagElement.className = "tag-item";
+        tagElement.textContent = `${key}: ${value}`;
+        tagsContainer.appendChild(tagElement);
+      });
+
+      slideElement.appendChild(tagsContainer);
+    }
+
+    container.appendChild(slideElement);
+  });
 }
 
 export { setMessage, clearMessage, tryCatch };

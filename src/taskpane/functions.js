@@ -1,4 +1,4 @@
-/* global PowerPoint */
+/* global PowerPoint, document, console */
 import { getSelectedSlideIndex, getSelectedSlideId } from "./utils.js";
 
 /**

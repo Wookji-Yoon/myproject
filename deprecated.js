@@ -1,5 +1,4 @@
-/* global document, Office, PowerPoint, console, OfficeExtension, FileReader */
-
+/*
 import { base64Image } from "../../base64Image";
 import { setMessage } from "./taskpane";
 
@@ -206,3 +205,5 @@ export {
   insertAllSlides,
   insertAfterSelectedSlide,
 };
+
+*/
