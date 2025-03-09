@@ -197,7 +197,7 @@ async function createJsonFile(filePath = "/me/drive/root:/myapp/") {
   }
 }
 
-async function readJsonFile() {
+async function readJsonFile(path = "/me/drive/root:/myapp/slides.json") {
   try {
     console.log("readJsonFile 함수 시작");
     const client = await getGraphClient();
@@ -206,10 +206,7 @@ async function readJsonFile() {
     try {
       // 파일의 다운로드 URL 먼저 획득
       console.log("파일 다운로드 URL 요청 중...");
-      const fileMetadata = await client
-        .api("/me/drive/root:/myapp/slides.json")
-        .select("@microsoft.graph.downloadUrl")
-        .get();
+      const fileMetadata = await client.api(path).select("@microsoft.graph.downloadUrl").get();
 
       console.log("파일 다운로드 URL 획득 성공");
 
@@ -242,14 +239,29 @@ async function updateJsonFile(jsonData) {
     const existingData = await readJsonFile();
 
     // 새 슬라이드 추가
-    existingData.slides.push(jsonData.slides[0]);
+    existingData.slides.push(jsonData);
 
     // Microsoft Graph API를 사용하여 파일 업데이트
-    await client.api("/me/drive/root:/myapp/presentation.json:/content").put(JSON.stringify(existingData, null, 2));
+    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(existingData, null, 2));
 
     console.log("JSON file updated successfully");
   } catch (error) {
     console.error("Error updating JSON file:", error);
+    throw error;
+  }
+
+  try {
+    const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+    
+    // 두 태그 배열을 중복 없이 합치기
+    const combinedTags = [...new Set([...tagJsonData.tags, ...jsonData.tags])];
+    tagJsonData.tags = combinedTags;
+    
+    // 업데이트된 태그 저장
+    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));
+    console.log("Tags updated successfully");
+  } catch (error) {
+    console.error("Error updating tags:", error);
     throw error;
   }
 }

@@ -1,6 +1,7 @@
-/* global document, Office, console*/
+/* global document, Office, console, setTimeout, location */
 
-import { signIn, createJsonFile, readJsonFile, fileExists, createFolder } from "./graphService";
+
+import { signIn, createJsonFile, readJsonFile, fileExists, createFolder, updateJsonFile } from "./graphService";
 import { exportSelectedSlideAsBase64, insertAfterSelectedSlide } from "./functions";
 import Tagify from "@yaireo/tagify";
 
@@ -105,8 +106,10 @@ Office.onReady((info) => {
         // 슬라이드 추가 폼 데이터를 사용하여 슬라이드 추가
         try {
           const result = await exportSelectedSlideAsBase64(formData);
+          await updateJsonFile(result);
           console.log("슬라이드 export 성공");
           console.log(result);
+          location.reload();
         } catch (error) {
           console.error("슬라이드 export 실패:", error);
         }
@@ -231,38 +234,38 @@ function displaySlides(slides) {
     thumbnailImg.src = `data:image/png;base64,${slide.thumbnail}`;
     thumbnailImg.alt = "슬라이드 썸네일" + slide.id;
     thumbnailContainer.appendChild(thumbnailImg);
-    
+
     // 토글 아이콘 추가
     const toggleIcon = document.createElement("div");
     toggleIcon.className = "toggle-icon";
     toggleIcon.textContent = "▼";
     thumbnailContainer.appendChild(toggleIcon);
-    
+
     slideElement.appendChild(thumbnailContainer);
 
     // 슬라이드 정보 표시
     const slideInfo = document.createElement("div");
     slideInfo.className = "slide-info";
     const slideTitle = document.createElement("p");
-    
+
     // 제목과 날짜 추가
     const titleStrong = document.createElement("strong");
     titleStrong.textContent = slide.title;
     slideTitle.appendChild(titleStrong);
-    
+
     // 날짜 추가 (slide.date가 있으면 사용, 없으면 현재 날짜 표시)
     const dateSpan = document.createElement("span");
     const formattedDate = slide.saved_at.split("T")[0].substring(2);
     dateSpan.textContent = formattedDate;
     slideTitle.appendChild(dateSpan);
-    
+
     slideInfo.appendChild(slideTitle);
     slideElement.appendChild(slideInfo);
-    
+
     // 태그 목록 추가
     const tagList = document.createElement("div");
     tagList.className = "tag-list";
-    
+
     // 태그가 있는 경우 추가
     if (slide.tags && Array.isArray(slide.tags)) {
       slide.tags.forEach((tag) => {
@@ -272,12 +275,12 @@ function displaySlides(slides) {
         tagList.appendChild(tagItem);
       });
     }
-    
+
     slideElement.appendChild(tagList);
 
     container.appendChild(slideElement);
   });
-  
+
   // 태그 리스트의 높이를 확인하여 필요한 경우 overflowing 클래스 추가
   setTimeout(() => {
     const tagLists = document.querySelectorAll(".tag-list");
@@ -335,34 +338,27 @@ function registerPageEventHandlers(pageId) {
   } else if (pageId === "add-page") {
     // add-page 페이지에 대한 이벤트 핸들러
     console.log("add-page 이벤트 핸들러 등록");
+    tryCatch(async () => {
+      const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+      console.log("태그 JSON 데이터 읽기 성공:", tagJsonData);
 
-    // Tagify 초기화
-    // 기본 태그 입력 필드
-    const basicInput = document.querySelector("input[name=basic]");
-    if (basicInput) {
-      new Tagify(basicInput, {
-        whitelist: ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"],
-        dropdown: {
-          maxItems: 5,
-          classname: "tags-look",
-          enabled: 0,
-          closeOnSelect: false,
-        },
-        maxTags: 10,
-      });
-      console.log("기본 태그 입력 필드에 Tagify 적용됨");
-    }
-
-    // 슬라이드 태그 입력 필드
-    const slideTagsInput = document.getElementById("slide-tags");
-    if (slideTagsInput) {
-      new Tagify(slideTagsInput, {
-        dropdown: {
-          enabled: 0, // 드롭다운 비활성화
-        },
-      });
-      console.log("슬라이드 태그 입력 필드에 Tagify 적용됨");
-    }
+      // Tagify 초기화
+      // 기본 태그 입력 필드
+      const basicInput = document.querySelector("input[name=basic]");
+      if (basicInput) {
+        new Tagify(basicInput, {
+          whitelist: tagJsonData.tags,
+          dropdown: {
+            maxItems: 5,
+            classname: "tags-look",
+            enabled: 0,
+            closeOnSelect: false,
+          },
+          maxTags: 10,
+        });
+        console.log("기본 태그 입력 필드에 Tagify 적용됨");
+      }
+    });
   }
 }
 

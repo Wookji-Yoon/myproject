@@ -27,7 +27,6 @@ async function exportSelectedSlideAsBase64(formData) {
       console.log(formData);
       const { title, tags, timestamp } = formData;
       console.log(title, tags, timestamp);
- 
 
       await context.sync();
 
@@ -36,6 +35,7 @@ async function exportSelectedSlideAsBase64(formData) {
       const thumbnailBase64Value = thumbnail.m_value;
 
       resolve({
+        id: new Date().getTime().toString(), // 고유 ID 생성
         slide: slideBase64Value,
         thumbnail: thumbnailBase64Value,
         title: title,
