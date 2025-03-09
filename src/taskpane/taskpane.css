@@ -111,17 +111,30 @@ b {
 .slide-info p {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin: 5px 0;
 }
 
 .slide-info strong {
-  font-size: 18px;
+  font-size: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  max-width: calc(100% - 80px); /* 날짜 영역 너비 고려 */
 }
 
 .slide-info span {
   color: #666666;
   font-size: 13px;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  min-width: 75px; /* 최소 너비 설정 */
+  text-align: right;
+  margin-left: 5px;
+  flex-shrink: 0; /* 공간이 부족해도 크기 유지 */
 }
 
 .thumbnail-container {
@@ -160,13 +173,29 @@ b {
 .tag-list {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1px;
-  margin-bottom: 0px;
+  margin-top: -5px;
+  margin-bottom: 10px;
   padding: 0;
   transition: max-height 0.3s ease, opacity 0.3s ease;
-  max-height: 300px;
+  max-height: 46px; /* 태그 두 줄 정도의 높이 (태그 높이 + 여백) */
   overflow: hidden;
   opacity: 1;
+  position: relative;
+}
+
+.tag-list:after {
+  content: "...";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0 5px;
+  background-color: #f8f8f8;
+  font-weight: bold;
+  display: none;
+}
+
+.tag-list.overflowing:after {
+  display: block;
 }
 
 .tag-item {
@@ -481,6 +510,11 @@ b {
   opacity: 0;
   margin: 0;
   padding: 0;
+}
+
+.tag-list.collapsed:after,
+.tag-list.collapsed.overflowing:after {
+  display: none;
 }
 
 /* 검색창 스타일 추가 */

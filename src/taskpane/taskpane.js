@@ -28,10 +28,10 @@ Office.onReady((info) => {
       tryCatch(async () => {
         const account = await signIn();
         setMessage(`${account.name}님으로 성공적으로 로그인했습니다!`);
-        
+
         // myapp 폴더 생성 (없는 경우)
         await createFolder();
-        
+
         // JSON 파일 경로 설정
         const jsonFilePath = "/me/drive/root:/myapp/";
         // 파일 존재 여부 확인
@@ -223,50 +223,73 @@ function displaySlides(slides) {
     const slideElement = document.createElement("div");
     slideElement.className = "slide-item";
 
-    // Insert 버튼 추가
-    const insertButton = document.createElement("button");
-    insertButton.className = "insert-button";
-    insertButton.textContent = "Insert";
-    insertButton.onclick = async () => {
-      try {
-        await insertAfterSelectedSlide(slides, slide.id);
-        setMessage("슬라이드가 성공적으로 삽입되었습니다!");
-      } catch (error) {
-        setMessage(`슬라이드 삽입 중 오류 발생: ${error.message}`);
-      }
-    };
-    slideElement.appendChild(insertButton);
-
-    // ID 표시
-    const idElement = document.createElement("div");
-    idElement.className = "slide-info";
-    idElement.textContent = `슬라이드 ID: ${slide.id}`;
-    slideElement.appendChild(idElement);
-
     // 썸네일 이미지 표시
+    const thumbnailContainer = document.createElement("div");
+    thumbnailContainer.className = "thumbnail-container";
     const thumbnailImg = document.createElement("img");
     thumbnailImg.className = "slide-thumbnail";
     thumbnailImg.src = `data:image/png;base64,${slide.thumbnail}`;
-    thumbnailImg.alt = "슬라이드 썸네일";
-    slideElement.appendChild(thumbnailImg);
+    thumbnailImg.alt = "슬라이드 썸네일" + slide.id;
+    thumbnailContainer.appendChild(thumbnailImg);
+    
+    // 토글 아이콘 추가
+    const toggleIcon = document.createElement("div");
+    toggleIcon.className = "toggle-icon";
+    toggleIcon.textContent = "▼";
+    thumbnailContainer.appendChild(toggleIcon);
+    
+    slideElement.appendChild(thumbnailContainer);
 
-    // 태그 표시
-    if (slide.tags) {
-      const tagsContainer = document.createElement("div");
-      tagsContainer.className = "tag-list";
-
-      Object.entries(slide.tags).forEach(([key, value]) => {
-        const tagElement = document.createElement("span");
-        tagElement.className = "tag-item";
-        tagElement.textContent = `${key}: ${value}`;
-        tagsContainer.appendChild(tagElement);
+    // 슬라이드 정보 표시
+    const slideInfo = document.createElement("div");
+    slideInfo.className = "slide-info";
+    const slideTitle = document.createElement("p");
+    
+    // 제목과 날짜 추가
+    const titleStrong = document.createElement("strong");
+    titleStrong.textContent = slide.title;
+    slideTitle.appendChild(titleStrong);
+    
+    // 날짜 추가 (slide.date가 있으면 사용, 없으면 현재 날짜 표시)
+    const dateSpan = document.createElement("span");
+    const formattedDate = slide.saved_at.split("T")[0].substring(2);
+    dateSpan.textContent = formattedDate;
+    slideTitle.appendChild(dateSpan);
+    
+    slideInfo.appendChild(slideTitle);
+    slideElement.appendChild(slideInfo);
+    
+    // 태그 목록 추가
+    const tagList = document.createElement("div");
+    tagList.className = "tag-list";
+    
+    // 태그가 있는 경우 추가
+    if (slide.tags && Array.isArray(slide.tags)) {
+      slide.tags.forEach((tag) => {
+        const tagItem = document.createElement("span");
+        tagItem.className = "tag-item";
+        tagItem.textContent = tag;
+        tagList.appendChild(tagItem);
       });
-
-      slideElement.appendChild(tagsContainer);
     }
+    
+    slideElement.appendChild(tagList);
 
     container.appendChild(slideElement);
   });
+  
+  // 태그 리스트의 높이를 확인하여 필요한 경우 overflowing 클래스 추가
+  setTimeout(() => {
+    const tagLists = document.querySelectorAll(".tag-list");
+    tagLists.forEach((tagList) => {
+      // 스크롤 높이가 표시 높이보다 크면 오버플로우가 발생한 것
+      if (tagList.scrollHeight > tagList.clientHeight) {
+        tagList.classList.add("overflowing");
+      } else {
+        tagList.classList.remove("overflowing");
+      }
+    });
+  }, 100); // DOM이 완전히 렌더링될 시간을 주기 위해 지연 실행
 }
 
 // 페이지 전환 시 이벤트 핸들러 등록 함수 추가

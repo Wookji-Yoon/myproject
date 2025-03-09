@@ -87,7 +87,7 @@
                     <div class="toggle-icon" id="toggle-info">▼</div>
                   </div>
                   <div class="slide-info">
-                    <p><strong>슬라이드 1</strong><span>2021-02-07</span></p>
+                    <p><strong>슬라이드2ㅁㄴㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ 1</strong><span>21-02-07</span></p>
                   </div>
                   <div class="tag-list">
                     <span class="tag-item">설명</span>
@@ -108,7 +108,7 @@
                     <div class="toggle-icon">▼</div>
                   </div>
                   <div class="slide-info">
-                    <p><strong>슬라이드 2</strong><span>2021-02-08</span></p>
+                    <p><strong>슬라이드 2</strong><span>21-02-08</span></p>
                   </div>
                   <div class="tag-list">
                     <span class="tag-item">설명ㅇ</span>
@@ -194,7 +194,16 @@
               if (isCollapsed) {
                 // 펼치기
                 allSlideInfos.forEach(info => info.classList.remove('collapsed'));
-                allTagLists.forEach(tags => tags.classList.remove('collapsed'));
+                allTagLists.forEach(tags => {
+                  tags.classList.remove('collapsed');
+                  
+                  // 태그가 오버플로우 상태인지 확인하고 클래스 추가
+                  if (tags.scrollHeight > tags.clientHeight) {
+                    tags.classList.add('overflowing');
+                  } else {
+                    tags.classList.remove('overflowing');
+                  }
+                });
                 allToggleIcons.forEach(icon => icon.textContent = '▼');
               } else {
                 // 접기
