@@ -9,6 +9,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: #f4f4f4; /* ms-bgColor-neutralLighter 색상 */
 }
 
 ul {
@@ -18,27 +19,32 @@ ul {
 
 .ms-welcome__header {
   padding: 20px;
-  padding-bottom: 30px;
-  padding-top: 100px;
   display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
   align-items: center;
 }
 
 .ms-welcome__main {
   display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
   -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
   -webkit-align-items: center;
+  -ms-flex-align: center;
   align-items: center;
   -webkit-flex: 1 0 0;
+  -ms-flex: 1 0 0;
   flex: 1 0 0;
-  padding: 10px 20px;
+  padding: 0;
 }
 
 .ms-welcome__main > h2 {
@@ -83,27 +89,84 @@ b {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 4px;
+  margin-top: 3px;
+  margin-bottom: 0px;
+  padding: 0;
+  border: none;
 }
 
 .slide-info {
-  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -7px;
+  margin-bottom: 0px;
+  padding: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 300px;
+  overflow: hidden;
+  opacity: 1;
+}
+
+.slide-info p {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 5px 0;
+}
+
+.slide-info strong {
+  font-size: 18px;
+}
+
+.slide-info span {
+  color: #666666;
+  font-size: 13px;
+}
+
+.thumbnail-container {
+  position: relative;
+  width: 100%;
+  display: block;
+  margin-bottom: 0;
 }
 
 .slide-thumbnail {
   width: 100%;
   height: auto;
-  margin-bottom: 10px;
-  display: block;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+.slide-title {
+  color: #000000;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 8px 0 4px 0;
+}
+
+.slide-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.slide-date {
+  color: #666666;
+  font-size: 13px;
+  margin-right: 8px;
 }
 
 .tag-list {
-  background-color: #f5f5f5;
-  padding: 5px;
-  border-radius: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1px;
+  margin-bottom: 0px;
+  padding: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 300px;
+  overflow: hidden;
+  opacity: 1;
 }
 
 .tag-item {
@@ -112,6 +175,7 @@ b {
   padding: 2px 8px;
   margin: 2px;
   border-radius: 3px;
+  font-size: 12px;
 }
 
 .insert-button {
@@ -124,6 +188,7 @@ b {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  z-index: 10;
 }
 
 .insert-button:hover {
@@ -136,6 +201,7 @@ b {
   padding: 10px;
   background-color: #f3f3f3;
   border-bottom: 1px solid #ddd;
+  width: 100%;
 }
 
 .nav-button {
@@ -157,7 +223,19 @@ b {
 
 .page {
   display: none;
-  padding: 20px;
+  padding: 0;
+  width: 100%;
+}
+
+#list-page.page {
+  padding: 0;
+}
+
+/* 여기서 헤더와 버튼에만 여백 적용 */
+#list-page .page-content > h2,
+#list-page .page-content > .ms-Button {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .page.active {
@@ -167,4 +245,440 @@ b {
 .page-content {
   max-width: 800px;
   margin: 0 auto;
+}
+
+/* 메인 페이지 추가 스타일 */
+.ms-welcome__action-container {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.ms-welcome__action-container .ms-Button {
+  margin-bottom: 15px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 버튼 스타일 수정 - Twitter 색상으로 변경 */
+#sign-in.ms-Button--hero {
+  background-color: #1DA1F2 !important;
+  border: none !important;
+  color: white !important;
+  font-size: 14px;
+  height: 45px;
+  width: 100%;
+  max-width: 280px;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+#sign-in.ms-Button--hero:hover {
+  background-color: #0d8bd9 !important;
+}
+
+#sign-in.ms-Button--hero .ms-logo {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+#sign-in.ms-Button--hero .ms-logo rect {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 0.5;
+}
+
+#sign-in.ms-Button--hero .ms-Button-label {
+  color: white !important;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.ms-Button--primary {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.ms-Button--primary:hover {
+  background-color: #106ebe;
+}
+
+.ms-Button--primary .ms-Icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.ms-welcome__features .ms-ListItem {
+  margin-bottom: 15px;
+}
+
+.ms-welcome__features .ms-ListItem .ms-Icon {
+  color: #0078d7;
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+#app-body {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* 모든 요소에 box-sizing 적용 */
+* {
+  box-sizing: border-box;
+}
+
+/* 메인 페이지용 스타일 */
+.main-content {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+  position: relative;
+  min-height: 500px;
+}
+
+.logo-container {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 100%;
+}
+
+.main-title {
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 20px;
+  max-width: 280px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.login-container {
+  position: absolute;
+  bottom:0px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.help-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.help-link {
+  color: #757575;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.help-link:hover {
+  color: #555555;
+}
+
+#message {
+  padding: 10px 15px;
+  margin: 10px;
+  border-radius: 6px;
+  background-color: #f0f6ff;
+  color: #0078d4;
+  font-size: 14px;
+  min-height: 20px;
+  text-align: center;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* 슬라이드 목록 페이지 전체 너비 조정 */
+#list-page .page-content {
+  max-width: 100%;
+  padding: 0 10px;
+}
+
+#slides-list {
+  width: 100%;
+}
+
+#slides-list .padding {
+  width: 100%;
+  padding: 0;
+}
+
+#slides-container {
+  width: 100%;
+}
+
+.toggle-icon {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 5;
+}
+
+.toggle-icon:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.slide-info.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.tag-list.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* 검색창 스타일 추가 */
+#search-container {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  margin: 0 0 15px 0;
+}
+
+.search-wrapper {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+#search-input {
+  -ms-flex: 1;
+  flex: 1;
+  height: 40px;
+  padding: 8px 40px 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+#search-input:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+#search-button {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+#search-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+#search-button .ms-Icon--Search {
+  font-size: 16px;
+  color: #666;
+}
+
+.filter-options {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 5px 0;
+}
+
+.filter-label {
+  font-size: 12px;
+  color: #666;
+  margin-right: 8px;
+}
+
+.filter-tabs {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-tab {
+  font-size: 12px;
+  padding: 4px 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.filter-tab.active {
+  background-color: #0078d4;
+  color: white;
+  border-color: #0078d4;
+}
+
+.filter-tab:hover:not(.active) {
+  background-color: #e8e8e8;
+}
+
+/* list-page 내부 버튼들의 여백 조정 */
+#list-page .page-content > .ms-Button {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+/* 슬라이드 추가 페이지 스타일 */
+.center-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.required {
+  color: #e74c3c;
+  margin-right: 3px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  height:45px;
+}
+
+.form-input:focus {
+  border-color: #0078d7;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.25);
+}
+
+.form-button-container {
+  margin-top: 150px;
+  text-align: center;
+}
+
+#add-slide-button {
+  min-width: 200px;
+  width: 60%;
+  padding: 10px 16px;
+}
+
+.tagify--custom-dropdown {
+  background-color: #ffffff;
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.tagify--custom-dropdown:focus {
+  border-color: #0078d7;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.25);
 }

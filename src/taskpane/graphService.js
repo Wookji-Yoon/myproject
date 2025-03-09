@@ -12,7 +12,7 @@ const msalConfig = {
   },
   system: {
     loggerOptions: {
-      loggerCallback: (level, message, containsPii) => {
+      loggerCallback: (level, message) => {
         console.log(`MSAL Log: ${message}`);
       },
       piiLoggingEnabled: false,
@@ -82,22 +82,36 @@ async function getGraphClient() {
   });
 }
 
-async function createFolder() {
+async function createFolder(folderName = "myapp") {
   await initializeMsal();
   const client = await getGraphClient();
 
   try {
-    // 'myapp' 폴더 생성
-    await client.api("/me/drive/root/children").post({
-      name: "myapp",
-      folder: {},
-    });
-    console.log("Folder 'myapp' created successfully");
+    // 폴더 존재 여부 확인
+    try {
+      await client.api(`/me/drive/root:/${folderName}`).get();
+      console.log(`Folder '${folderName}' already exists`);
+      return true; // 폴더가 이미 존재함
+    } catch (error) {
+      // 폴더가 없으면 생성
+      if (error.statusCode === 404) {
+        await client.api("/me/drive/root/children").post({
+          name: folderName,
+          folder: {},
+        });
+        console.log(`Folder '${folderName}' created successfully`);
+        return true;
+      } else {
+        throw error;
+      }
+    }
   } catch (error) {
     console.error("Error creating folder:", error);
+    return false;
   }
 }
 
+/* 현재 사용되지 않는 함수
 async function createPowerPointFile() {
   await initializeMsal();
   const client = await getGraphClient();
@@ -113,30 +127,61 @@ async function createPowerPointFile() {
     console.error("Error creating PowerPoint file:", error);
   }
 }
+*/
 
-async function createJsonFile() {
+async function fileExists(filePath) {
   await initializeMsal();
   const client = await getGraphClient();
 
   try {
+    // 파일 존재 여부는 메타데이터로 확인하므로 /content를 추가하지 않음
+    await client.api(filePath).get();
+    return true;
+  } catch (error) {
+    if (error.statusCode === 404) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+async function createJsonFile(filePath = "/me/drive/root:/myapp/") {
+  await initializeMsal();
+  const client = await getGraphClient();
+
+  const sampleDict = {
+    id: "1",
+    title: "sample",
+    tags: ["sample", "test"],
+    saved_at: "2025-02-14T13:47:49.606Z",
+    thumbnail: "ddd",
+    slide: "ddd",
+  };
+
+  try {
     // 기본 JSON 구조를 exportSelectedSlideAsBase64의 출력 형식과 일치시킴
-    await client.api("/me/drive/root:/myapp/presentation.json:/content").put(
+    await client.api(filePath + "slides.json:/content").put(
       new Blob(
         [
           JSON.stringify(
             {
-              slides: [
-                {
-                  id: new Date().getTime().toString(),
-                  base64: "SGVsbG8gd29ybGQ=", // 예시 base64
-                  thumbnail: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC...", // 예시 썸네일
-                  saved_at: new Date().toISOString(),
-                  text_content: "Initial slide content",
-                  tags: {
-                    topic: "Initial Topic",
-                  },
-                },
-              ],
+              slides: [sampleDict],
+            },
+            null,
+            2
+          ),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    // Tag 저장용 Json을 따로 만듦
+    await client.api(filePath + "tags.json:/content").put(
+      new Blob(
+        [
+          JSON.stringify(
+            {
+              tags: ["샘플", "sample"],
             },
             null,
             2
@@ -153,27 +198,38 @@ async function createJsonFile() {
 }
 
 async function readJsonFile() {
-  const client = await getGraphClient();
-
   try {
-    // 파일의 다운로드 URL 먼저 획득
-    const fileMetadata = await client
-      .api("/me/drive/root:/myapp/presentation.json")
-      .select("@microsoft.graph.downloadUrl")
-      .get();
+    console.log("readJsonFile 함수 시작");
+    const client = await getGraphClient();
+    console.log("Graph 클라이언트 준비 완료");
 
-    // 다운로드 URL로 직접 fetch
-    const response = await fetch(fileMetadata["@microsoft.graph.downloadUrl"]);
+    try {
+      // 파일의 다운로드 URL 먼저 획득
+      console.log("파일 다운로드 URL 요청 중...");
+      const fileMetadata = await client
+        .api("/me/drive/root:/myapp/slides.json")
+        .select("@microsoft.graph.downloadUrl")
+        .get();
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+      console.log("파일 다운로드 URL 획득 성공");
+
+      // 다운로드 URL로 직접 fetch
+      console.log("파일 콘텐츠 가져오는 중...");
+      const response = await fetch(fileMetadata["@microsoft.graph.downloadUrl"]);
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+      }
+
+      const jsonData = await response.json();
+      console.log("JSON 파일 내용:", jsonData);
+      return jsonData;
+    } catch (error) {
+      console.error("Error reading JSON file:", error);
+      throw error;
     }
-
-    const jsonData = await response.json();
-    console.log("presentation.json contents:", jsonData);
-    return jsonData;
   } catch (error) {
-    console.error("Error reading JSON file:", error);
+    console.error("Error in readJsonFile function:", error);
     throw error;
   }
 }
@@ -182,7 +238,7 @@ async function updateJsonFile(jsonData) {
   const client = await getGraphClient();
 
   try {
-    // 기존 JSON 파일 읽기
+    // 기졸 JSON 파일 읽기
     const existingData = await readJsonFile();
 
     // 새 슬라이드 추가
@@ -198,4 +254,4 @@ async function updateJsonFile(jsonData) {
   }
 }
 
-export { signIn, createFolder, createPowerPointFile, createJsonFile, readJsonFile, updateJsonFile };
+export { initializeMsal, signIn, fileExists, createJsonFile, readJsonFile, updateJsonFile, createFolder };
