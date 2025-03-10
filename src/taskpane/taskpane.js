@@ -1,11 +1,11 @@
-/* global document, Office, window */
+/* global document, Office, window, setTimeout, console */
 
 /*
  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
 
-import { isUserLoggedIn } from "./graphService";
+import { isUserLoggedIn, readJsonFile } from "./graphService";
 import {
   handleSignIn,
   handleExportSlide,
@@ -14,9 +14,11 @@ import {
   handleEditSlide,
   handleDeleteIconClick,
   handleEditIconClick,
+  handleTitleSearch,
+  handleTagSearch,
 } from "./functions";
 import { tryCatch } from "./utils";
-import { clearSlideListCache } from "./state";
+import Tagify from "@yaireo/tagify";
 
 // Make showPage function globally accessible
 window.showPage = showPage;
@@ -28,13 +30,6 @@ Office.onReady((info) => {
 
     // 네비게이션 초기화
     initializeNavigation();
-
-    // 캐시 초기화 버튼 클릭 처리
-    document.getElementById("clear-cache").onclick = () => {
-      tryCatch(async () => {
-        await clearSlideListCache();
-      });
-    };
 
     // 로그인 상태에 따라 기본 페이지 표시
     tryCatch(async () => {
@@ -75,6 +70,89 @@ Office.onReady((info) => {
           await handleEditIconClick(event);
         }
       });
+    });
+
+    // list page에서 serach filter 클릭시 처리
+    // 필터 탭 클릭 이벤트
+    document.querySelectorAll(".filter-tab").forEach((tab) => {
+      tab.onclick = () => {
+        document.querySelector(".filter-tab.active").classList.remove("active");
+        tab.classList.add("active");
+        const activeFilter = document.querySelector(".filter-tab.active").getAttribute("data-filter");
+        const searchInputContainer = document.getElementById("search-input").parentElement;
+        const originalInput = document.getElementById("search-input");
+
+        // 기존 입력 필드 완전히 제거하고 새로 생성
+        if (originalInput) {
+          const newInput = document.createElement("input");
+          newInput.id = "search-input";
+          newInput.type = "text";
+          newInput.placeholder = activeFilter === "title" ? "제목으로 검색..." : "태그로 검색...";
+          newInput.className = originalInput.className;
+
+          searchInputContainer.removeChild(originalInput);
+          searchInputContainer.insertBefore(newInput, searchInputContainer.firstChild);
+
+          // 엔터키 이벤트 다시 등록
+          newInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+              document.getElementById("search-button").click();
+            }
+          });
+
+          if (activeFilter === "tag") {
+            tryCatch(async () => {
+              const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+              console.log("태그 JSON 데이터 읽기 성공:", tagJsonData);
+              new Tagify(newInput, {
+                whitelist: [...new Set([...tagJsonData.tags])],
+                dropdown: {
+                  maxItems: 5,
+                  classname: "tags-look",
+                  enabled: 0,
+                  clearOnSelect: false,
+                },
+                enforceWhitelist: true,
+              });
+            });
+          }
+        }
+      };
+    });
+
+    // list page에서 serach 처리
+
+    // 검색 버튼 클릭 이벤트
+    document.getElementById("search-button").onclick = () =>
+      tryCatch(async () => {
+        const searchInput = document.getElementById("search-input");
+        const activeFilter = document.querySelector(".filter-tab.active").getAttribute("data-filter");
+        searchInput.blur();
+        //searchinput 1초 동안 비활성화
+        searchInput.disabled = true;
+        setTimeout(() => {
+          searchInput.disabled = false;
+        }, 1000);
+        //1초 동안 뒤에 검색 버튼을 spinner로 변경
+        document.getElementById("search-button").innerHTML =
+          '<i class="ms-Icon ms-Icon--ProgressRingDots" aria-hidden="true"></i>';
+        setTimeout(() => {
+          document.getElementById("search-button").innerHTML =
+            '<i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i>';
+        }, 1000);
+
+        if (activeFilter === "title") {
+          await handleTitleSearch(searchInput.value);
+          //input에 되어있는 focus 제거
+        } else if (activeFilter === "tag") {
+          await handleTagSearch(searchInput.value);
+        }
+      });
+    // 검색 입력창 엔터키 이벤트
+    document.getElementById("search-input").addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        document.getElementById("search-button").click();
+      }
     });
 
     // 3. add-page에서 슬라이드 추가하기 버튼 클릭시 export 처리

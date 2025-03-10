@@ -607,6 +607,98 @@ async function handleEditIconClick(event) {
   setMessage(`수정 버튼 클릭됨. 슬라이드 ID: ${slideId}`);
 }
 
+/**
+ * 제목으로 슬라이드를 검색하는 함수
+ * @param {string} searchTerm - 검색어
+ */
+async function handleTitleSearch(searchTerm) {
+  try {
+    // 캐시된 슬라이드 목록 가져오기
+    const cache = await getSlideListCache();
+    const slides = cache.slides;
+
+    if (!slides || slides.length === 0) {
+      setMessage("검색할 슬라이드가 없습니다.", "warning");
+      return;
+    }
+
+    // 검색어가 비어있으면 모든 슬라이드 표시
+    if (!searchTerm || searchTerm.trim() === "") {
+      displaySlides(slides);
+      return;
+    }
+
+    // 제목에 검색어가 포함된 슬라이드 필터링
+    const filteredSlides = slides.filter(
+      (slide) => slide.title && slide.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (filteredSlides.length === 0) {
+      setMessage(`"${searchTerm}" 검색 결과가 없습니다.`, "info");
+      // 검색 결과가 없어도 빈 배열로 표시하여 UI 갱신
+      displaySlides([]);
+    } else {
+      setMessage("", "none"); // 메시지 지우기
+      displaySlides(filteredSlides);
+    }
+  } catch (error) {
+    setMessage(`검색 중 오류가 발생했습니다: ${error.message}`, "error");
+    console.error("검색 오류:", error);
+  }
+}
+
+/**
+ * 태그로 슬라이드를 검색하는 함수
+ * @param {string} searchTerm - 검색할 태그
+ */
+async function handleTagSearch(searchTerm) {
+  try {
+    // 캐시된 슬라이드 목록 가져오기
+    const cache = await getSlideListCache();
+    const slides = cache.slides;
+
+    if (!slides || slides.length === 0) {
+      setMessage("검색할 슬라이드가 없습니다.", "warning");
+      return;
+    }
+
+    // 검색어가 비어있으면 모든 슬라이드 표시
+    if (!searchTerm || searchTerm.trim() === "") {
+      displaySlides(slides);
+      return;
+    }
+
+    // 태그에 검색어가 포함된 슬라이드 필터링
+    const filteredSlides = slides.filter((slide) => {
+      if (!slide.tags) return false;
+
+      // 태그 배열인 경우
+      if (Array.isArray(slide.tags)) {
+        return slide.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      }
+
+      // 태그가 문자열인 경우 (쉼표로 구분된 문자열일 수 있음)
+      if (typeof slide.tags === "string") {
+        return slide.tags.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+
+      return false;
+    });
+
+    if (filteredSlides.length === 0) {
+      setMessage(`"${searchTerm}" 태그 검색 결과가 없습니다.`, "info");
+      // 검색 결과가 없어도 빈 배열로 표시하여 UI 갱신
+      displaySlides([]);
+    } else {
+      setMessage("", "none"); // 메시지 지우기
+      displaySlides(filteredSlides);
+    }
+  } catch (error) {
+    setMessage(`태그 검색 중 오류가 발생했습니다: ${error.message}`, "error");
+    console.error("태그 검색 오류:", error);
+  }
+}
+
 export {
   exportSelectedSlideAsBase64,
   insertAfterSelectedSlide,
@@ -619,4 +711,6 @@ export {
   handleEditSlide,
   handleDeleteIconClick,
   handleEditIconClick,
+  handleTitleSearch,
+  handleTagSearch,
 };

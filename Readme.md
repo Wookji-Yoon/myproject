@@ -17,3 +17,7 @@
 11. 태그 Input 스타일
 
 12. list-page, export 할때 로딩딩 [V]
+13. Microsoft 권한 [V]
+
+14. 배포
+15. To-be(로그아웃)
