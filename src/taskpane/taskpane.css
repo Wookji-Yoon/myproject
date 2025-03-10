@@ -151,6 +151,15 @@ b {
   height: auto;
   border: 1px solid #cccccc;
   border-radius: 8px;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.slide-thumbnail:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #0078d7;
 }
 
 /* 새로 추가한 아이콘 스타일 */
@@ -189,7 +198,6 @@ b {
 }
 
 .slide-icon:hover {
-  transform: scale(1.1);
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -551,7 +559,6 @@ b {
 
 .toggle-icon:hover {
   background-color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
 }
 
 .slide-info.collapsed {

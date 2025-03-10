@@ -53,9 +53,9 @@ async function exportSelectedSlideAsBase64(formData) {
 async function insertAfterSelectedSlide(slides, id) {
   await PowerPoint.run(async function (context) {
     const selectedSlideId = await getSelectedSlideId();
-    const slideBase64 = slides.find((slide) => slide.id === id).base64;
+    const sourceSlideBase64 = slides.find((slide) => slide.id === id).slide;
 
-    context.presentation.insertSlidesFromBase64(slideBase64, {
+    context.presentation.insertSlidesFromBase64(sourceSlideBase64, {
       formatting: PowerPoint.InsertSlideFormatting.keepSourceFormatting,
       targetSlideId: selectedSlideId + "#",
     });
@@ -196,6 +196,7 @@ function displaySlides(slides) {
     thumbnailImg.className = "slide-thumbnail";
     thumbnailImg.src = `data:image/png;base64,${slide.thumbnail}`;
     thumbnailImg.alt = "슬라이드 썸네일" + slide.id;
+    thumbnailImg.title = "슬라이드 삽입"; // 툴팁 추가
     thumbnailContainer.appendChild(thumbnailImg);
 
     // 아이콘 컨테이너 추가
