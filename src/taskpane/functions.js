@@ -11,7 +11,7 @@ import {
   deleteOneSlideJsonFile,
 } from "./graphService";
 import Tagify from "@yaireo/tagify";
-import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache } from "./state";
+import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache, updateSlideListCache } from "./state";
 
 /**
  * 주어진 태그 딕셔너리를 슬라이드에 추가하는 함수
@@ -374,6 +374,12 @@ function displaySlides(slides) {
  * @returns {Promise<void>}
  */
 async function handleExportSlide() {
+  // 버튼 로딩 상태 설정
+  const addButton = document.getElementById("add-slide-button");
+  const originalButtonText = addButton.textContent;
+  addButton.textContent = "진행 중...";
+  addButton.classList.add("loading");
+
   // 폼 데이터 가져오기
   const slideTitleInput = document.getElementById("slide-title");
   const slideTitle = slideTitleInput.value.trim();
@@ -399,14 +405,19 @@ async function handleExportSlide() {
 
     // 제목 입력 필드에 포커스 설정
     slideTitleInput.focus();
+
+    // 버튼 원래 상태로 복원
+    addButton.textContent = originalButtonText;
+    addButton.classList.remove("loading");
+
     return; // 함수 실행 중단
   }
 
-  // Tagify로 생성된 태그 요소 가져오기
-  const tagifyInput = document.querySelector('input[name="basic"]');
-  let tags = [];
-
   try {
+    // Tagify로 생성된 태그 요소 가져오기
+    const tagifyInput = document.querySelector('input[name="basic"]');
+    let tags = [];
+
     // Tagify 인스턴스가 있는 경우
     if (tagifyInput && tagifyInput.tagify) {
       // tagify의 값을 단순 문자열 배열로 변환
@@ -435,27 +446,21 @@ async function handleExportSlide() {
           .filter((tag) => tag);
       }
     }
-  } catch (e) {
-    console.error("태그 처리 중 오류 발생:", e);
-    // 오류 발생 시 빈 배열 유지
-    tags = [];
-  }
 
-  // 빈 문자열 태그 제거
-  tags = tags.filter((tag) => tag);
+    // 빈 문자열 태그 제거
+    tags = tags.filter((tag) => tag);
 
-  // 폼 데이터 객체 생성
-  const formData = {
-    title: slideTitle,
-    tags: tags,
-    timestamp: new Date().toISOString(),
-  };
+    // 폼 데이터 객체 생성
+    const formData = {
+      title: slideTitle,
+      tags: tags,
+      timestamp: new Date().toISOString(),
+    };
 
-  // 콘솔에 데이터 출력
-  console.log("슬라이드 추가 폼 데이터:", formData);
+    // 콘솔에 데이터 출력
+    console.log("슬라이드 추가 폼 데이터:", formData);
 
-  // 슬라이드 추가 폼 데이터를 사용하여 슬라이드 추가
-  try {
+    // 슬라이드 추가 폼 데이터를 사용하여 슬라이드 추가
     const result = await exportSelectedSlideAsBase64(formData);
     await updateJsonFile(result);
     console.log("슬라이드 export 성공");
@@ -464,9 +469,25 @@ async function handleExportSlide() {
     // 캐시 초기화 - 새로운 슬라이드가 추가되었으므로
     clearSlideListCache();
     location.reload();
+
+    // 폼 초기화
+    slideTitleInput.value = "";
+    if (tagifyInput && tagifyInput.tagify) {
+      tagifyInput.tagify.removeAllTags();
+    }
+
+    // 메시지 표시
+    setMessage("슬라이드가 성공적으로 추가되었습니다!");
+
+    // 목록 페이지로 이동
+    showPage("list-page");
   } catch (error) {
-    console.error("슬라이드 export 실패:", error);
+    console.error("슬라이드 내보내기 오류:", error);
     setMessage("슬라이드 내보내기에 실패했습니다: " + error.message);
+  } finally {
+    // 버튼 원래 상태로 복원
+    addButton.textContent = originalButtonText;
+    addButton.classList.remove("loading");
   }
 }
 
@@ -475,6 +496,12 @@ async function handleExportSlide() {
  * @returns {Promise<void>}
  */
 async function handleEditSlide() {
+  // 버튼 로딩 상태 설정
+  const editButton = document.getElementById("edit-slide-button");
+  const originalButtonText = editButton.textContent;
+  editButton.textContent = "진행 중...";
+  editButton.classList.add("loading");
+
   // 폼 데이터 가져오기
   const slideTitleInput = document.getElementById("edit-slide-title");
   const slideTitle = slideTitleInput.value.trim();
@@ -500,14 +527,19 @@ async function handleEditSlide() {
 
     // 제목 입력 필드에 포커스 설정
     slideTitleInput.focus();
+
+    // 버튼 원래 상태로 복원
+    editButton.textContent = originalButtonText;
+    editButton.classList.remove("loading");
+
     return; // 함수 실행 중단
   }
 
-  // Tagify로 생성된 태그 요소 가져오기
-  const tagifyInput = document.querySelector('input[name="edit-tags"]');
-  let tags = [];
-
   try {
+    // Tagify로 생성된 태그 요소 가져오기
+    const tagifyInput = document.querySelector('input[name="edit-tags"]');
+    let tags = [];
+
     // Tagify 인스턴스가 있는 경우
     if (tagifyInput && tagifyInput.tagify) {
       // tagify의 값을 단순 문자열 배열로 변환
@@ -536,28 +568,32 @@ async function handleEditSlide() {
           .filter((tag) => tag);
       }
     }
-  } catch (e) {
-    console.error("태그 처리 중 오류 발생:", e);
-    // 오류 발생 시 빈 배열 유지
-    tags = [];
-  }
 
-  // 빈 문자열 태그 제거
-  tags = tags.filter((tag) => tag);
+    // 빈 문자열 태그 제거
+    tags = tags.filter((tag) => tag);
 
-  const updatedSlide = await getSlideCache();
-  updatedSlide.title = slideTitle;
-  updatedSlide.tags = tags;
-  try {
+    const updatedSlide = await getSlideCache();
+    updatedSlide.title = slideTitle;
+    updatedSlide.tags = tags;
     await editJsonFile(updatedSlide);
     console.log("슬라이드 수정 성공");
 
     // 캐시 초기화 - 새로운 슬라이드가 추가되었으므로
     clearSlideListCache();
     location.reload();
+
+    // 메시지 표시
+    setMessage("슬라이드가 성공적으로 수정되었습니다!");
+
+    // 목록 페이지로 이동
+    showPage("list-page");
   } catch (error) {
-    console.error("슬라이드 수정 실패:", error);
+    console.error("슬라이드 수정 오류:", error);
     setMessage("슬라이드 수정에 실패했습니다: " + error.message);
+  } finally {
+    // 버튼 원래 상태로 복원
+    editButton.textContent = originalButtonText;
+    editButton.classList.remove("loading");
   }
 }
 
@@ -573,39 +609,21 @@ async function handleDeleteIconClick(event) {
     : event.target.closest(".delete-icon");
   const slideId = deleteButton.dataset.slideId;
 
-  // UI에서 해당 슬라이드 요소 저장 및 제거 (낙관적 UI 업데이트)
+  //프론트엔드에서 슬라이드 삭제
   const slideElement = deleteButton.closest(".slide-item");
-  const slideContainer = slideElement.parentNode;
-  const slideIndex = Array.from(slideContainer.children).indexOf(slideElement);
-  const slideClone = slideElement.cloneNode(true); // 복원을 위해 복제
+  slideElement.remove();
+
+  // 슬라이드 캐시 삭제
+  await updateSlideListCache(slideId);
 
   try {
-    // UI에서 먼저 요소 제거 (사용자에게 즉각적인 피드백 제공)
-    if (slideElement) {
-      slideElement.remove();
-      setMessage(`슬라이드 삭제 중...`);
-    }
-
     // 백엔드에서 슬라이드 삭제 시도
     await deleteOneSlideJsonFile(slideId);
-
     // 성공 시 최종 메시지 표시
     setMessage(`슬라이드 ID: ${slideId}가 삭제되었습니다`);
   } catch (error) {
-    // 실패 시 UI 복원
-    if (slideIndex >= 0) {
-      if (slideIndex === 0 && slideContainer.children.length === 0) {
-        // 컨테이너가 비어있는 경우 첫 번째 요소로 추가
-        slideContainer.appendChild(slideClone);
-      } else if (slideIndex >= slideContainer.children.length) {
-        // 마지막 요소였던 경우 마지막에 추가
-        slideContainer.appendChild(slideClone);
-      } else {
-        // 중간에 있었던 경우 해당 위치에 삽입
-        slideContainer.insertBefore(slideClone, slideContainer.children[slideIndex]);
-      }
-    }
-
+    // 실패시 새롭게 SlideList 받아오기 위해 새로고침
+    location.reload();
     setMessage(`슬라이드 삭제에 실패했습니다: ${error.message}`);
   }
 }

@@ -356,7 +356,63 @@ b {
   justify-content: center;
 }
 
-/* 버튼 스타일 수정 - Twitter 색상으로 변경 */
+/* 버튼 스타일 통일 - Twitter 색상 기반으로 통일 */
+.action-button {
+  background-color: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 16px;
+  font-weight: 600;
+  min-width: 200px;
+  width: 60%;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  text-align: center;
+}
+
+.action-button:hover {
+  background-color: #0d8bd9;
+}
+
+/* 버튼 로딩 상태 스타일 */
+.action-button.loading {
+  background-color: #1683c7;
+  cursor: not-allowed;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* 동그란 추가 버튼 */
+.add-circle-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #1da1f2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 100;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.add-circle-button:hover {
+  background-color: #0d8bd9;
+  transform: scale(1.05);
+}
+
+.add-circle-button i {
+  font-size: 20px;
+}
+
+/* 버튼 스타일 수정 - 모든 곳에서 Twitter 색상으로 통일 */
 #sign-in.ms-Button--hero {
   background-color: #1da1f2 !important;
   border: none !important;
@@ -718,9 +774,9 @@ b {
 }
 
 .filter-tab.active {
-  background-color: #0078d4;
+  background-color: #1da1f2;
   color: white;
-  border-color: #0078d4;
+  border-color: #1da1f2;
 }
 
 .filter-tab:hover:not(.active) {
@@ -800,10 +856,25 @@ b {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#add-slide-button {
+/* 슬라이드 추가/수정 버튼 스타일 통일 */
+#add-slide-button,
+#edit-slide-button {
   min-width: 200px;
   width: 60%;
   padding: 10px 16px;
+  background-color: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+#add-slide-button:hover,
+#edit-slide-button:hover {
+  background-color: #0d8bd9;
 }
 
 .tagify--custom-dropdown {

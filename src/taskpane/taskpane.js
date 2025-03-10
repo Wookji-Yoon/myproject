@@ -72,6 +72,11 @@ Office.onReady((info) => {
       });
     });
 
+    // 슬라이드 추가 버튼 클릭 이벤트
+    document.getElementById("add-new-slide-button").addEventListener("click", () => {
+      showPage("add-page");
+    });
+
     // list page에서 serach filter 클릭시 처리
     // 필터 탭 클릭 이벤트
     document.querySelectorAll(".filter-tab").forEach((tab) => {
@@ -123,8 +128,6 @@ Office.onReady((info) => {
         }
       };
     });
-
-    // list page에서 serach 처리
 
     // 검색 버튼 클릭 이벤트
     document.getElementById("search-button").onclick = () =>

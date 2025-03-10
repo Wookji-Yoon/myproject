@@ -24,6 +24,16 @@ async function getSlideListCache() {
 }
 
 /**
+ * 슬라이드목록 캐시를 업데이트하는 함수
+ */
+async function updateSlideListCache(slideId) {
+  const slideList = await getSlideListCache();
+  const updatedSlideList = slideList.slides.filter((slide) => slide.id !== slideId);
+  slideListCache = updatedSlideList;
+  return slideListCache;
+}
+
+/**
  * 슬라이드목록 캐시를 초기화하는 함수
  */
 function clearSlideListCache() {
@@ -55,4 +65,4 @@ async function clearSlideCache() {
   console.log("슬라이드 캐시가 초기화되었습니다.");
 }
 
-export { getSlideListCache, clearSlideListCache, addSlideCache, getSlideCache, clearSlideCache };
+export { getSlideListCache, clearSlideListCache, addSlideCache, getSlideCache, clearSlideCache, updateSlideListCache };

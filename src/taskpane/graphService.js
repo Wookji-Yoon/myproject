@@ -4,6 +4,7 @@ import * as msal from "@azure/msal-browser";
 import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
 
 import { subtractArrays } from "./utils";
+import { sampleDict } from "./sample";
 
 const msalConfig = {
   auth: {
@@ -150,15 +151,6 @@ async function fileExists(filePath) {
 async function createJsonFile(filePath = "/me/drive/root:/myapp/") {
   await initializeMsal();
   const client = await getGraphClient();
-
-  const sampleDict = {
-    id: "1",
-    title: "sample",
-    tags: ["sample", "test"],
-    saved_at: "2025-02-14T13:47:49.606Z",
-    thumbnail: "ddd",
-    slide: "ddd",
-  };
 
   try {
     // 기본 JSON 구조를 exportSelectedSlideAsBase64의 출력 형식과 일치시킴

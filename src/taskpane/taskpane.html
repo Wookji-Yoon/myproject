@@ -17,16 +17,14 @@
   <body class="ms-font-m ms-Fabric">
     <div id="sideload-msg">로딩 중...</div>
     <div id="app-body" style="display: none">
-      <nav class="nav-menu">
+    <nav class="nav-menu">
         <button class="nav-button" data-page="main-page">메인</button>
         <button class="nav-button" data-page="list-page">슬라이드 목록</button>
         <button class="nav-button" data-page="add-page">슬라이드 추가</button>
         <button class="nav-button" data-page="edit-page">수정하기</button>
       </nav>
 
-      <!-- 공통 메시지 영역 추가 -->
       <div id="message"></div>
-
       <div id="main-page" class="page">
         <div class="page-content main-content">
           <div class="logo-container">
@@ -75,6 +73,10 @@
             <div class="padding">
               <div id="slides-container"></div>
             </div>
+            <!-- 슬라이드 추가 버튼 -->
+            <div class="add-circle-button" id="add-new-slide-button" title="목록에 슬라이드 추가">
+              <i class="ms-Icon ms-Icon--Add" aria-hidden="true"></i>
+            </div>
           </section>
         </div>
       </div>
@@ -100,7 +102,7 @@
             </div>
 
             <div class="form-button-container">
-              <button class="ms-Button ms-Button--primary" id="add-slide-button">슬라이드 추가하기</button>
+              <button class="ms-Button ms-Button--primary action-button" id="add-slide-button">슬라이드 추가하기</button>
             </div>
           </div>
         </div>
@@ -132,7 +134,7 @@
             </div>
 
             <div class="form-button-container">
-              <button class="ms-Button ms-Button--primary" id="edit-slide-button">슬라이드 수정하기</button>
+              <button class="ms-Button ms-Button--primary action-button" id="edit-slide-button">슬라이드 수정하기</button>
             </div>
           </div>
         </div>
