@@ -275,7 +275,10 @@ async function deleteOneSlideJsonFile(slideId) {
   try {
     //삭제할 슬라이드 찾아서 제거
     const updatedData = existingData.slides.filter((slide) => slide.id !== slideId);
-    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(updatedData, null, 2));
+    const updatedJsonData = {
+      slides: updatedData,
+    };
+    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(updatedJsonData, null, 2));
   } catch (error) {
     console.error("Error deleting slide:", error);
     throw error;
@@ -288,8 +291,11 @@ async function deleteOneSlideJsonFile(slideId) {
     const targetSlide = existingData.slides.find((slide) => slide.id === slideId);
     const deletedTags = targetSlide.tags;
     const updatedTags = subtractArrays(tagJsonData.tags, deletedTags);
+    const updatedTagsJsonData = {
+      tags: updatedTags,
+    };
 
-    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(updatedTags, null, 2));
+    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(updatedTagsJsonData, null, 2));
   } catch (error) {
     console.error("Error deleting tags:", error);
     throw error;

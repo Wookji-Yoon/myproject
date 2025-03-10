@@ -3,6 +3,34 @@ import { getSelectedSlideIndex, getSelectedSlideId, setMessage, tryCatch } from 
 import { signIn, createFolder, fileExists, createJsonFile, readJsonFile, updateJsonFile } from "./graphService";
 import Tagify from "@yaireo/tagify";
 
+// 슬라이드 데이터 캐시
+let slidesCache = null;
+
+/**
+ * 슬라이드 JSON 데이터를 가져오는 함수 (캐시 활용)
+ * @returns {Promise<Object>} 슬라이드 데이터
+ */
+async function getSlidesData() {
+  if (slidesCache === null) {
+    console.log("슬라이드 데이터를 캐시에서 찾을 수 없음, API 호출");
+    const jsonData = await readJsonFile();
+    if (jsonData && jsonData.slides) {
+      slidesCache = jsonData;
+    }
+  } else {
+    console.log("캐시된 슬라이드 데이터 사용");
+  }
+  return slidesCache;
+}
+
+/**
+ * 슬라이드 캐시를 초기화하는 함수
+ */
+function clearSlidesCache() {
+  slidesCache = null;
+  console.log("슬라이드 캐시가 초기화되었습니다.");
+}
+
 /**
  * 주어진 태그 딕셔너리를 슬라이드에 추가하는 함수
  * @param {Object} userTags 태그 딕셔너리 (key-value 쌍)
@@ -65,6 +93,28 @@ async function insertAfterSelectedSlide(slides, id) {
 }
 
 /**
+ * 선택한 슬라이드 ID를 삽입하는 핸들러 함수
+ * @param {string} slideId 삽입할 슬라이드 ID
+ */
+async function handleInsertSlide(slideId) {
+  try {
+    // 메시지 표시
+    setMessage(`슬라이드 ${slideId}를 선택했습니다`);
+
+    // 캐시된 데이터 가져오기
+    const jsonData = await getSlidesData();
+
+    // 슬라이드 삽입
+    await insertAfterSelectedSlide(jsonData.slides, slideId);
+
+    setMessage(`슬라이드 ${slideId}가 성공적으로 삽입되었습니다`);
+  } catch (error) {
+    console.error("슬라이드 삽입 실패:", error);
+    setMessage("슬라이드 삽입에 실패했습니다: " + error.message);
+  }
+}
+
+/**
  * 특정 페이지를 표시하는 함수
  * @param {string} pageId 표시할 페이지의 ID
  */
@@ -108,8 +158,7 @@ function registerPageEventHandlers(pageId) {
     console.log("list-page 이벤트 핸들러 등록");
     tryCatch(async () => {
       try {
-        const jsonData = await readJsonFile();
-        console.log("JSON 데이터 읽기 성공:", jsonData);
+        const jsonData = await getSlidesData();
 
         if (jsonData && jsonData.slides) {
           displaySlides(jsonData.slides);
@@ -208,12 +257,14 @@ function displaySlides(slides) {
     infoButton.className = "slide-icon edit-icon";
     infoButton.innerHTML = '<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>';
     infoButton.title = "슬라이드 수정";
+    infoButton.dataset.slideId = slide.id;
 
     // 삭제 버튼 추가
     const deleteButton = document.createElement("div");
     deleteButton.className = "slide-icon delete-icon";
     deleteButton.innerHTML = '<i class="ms-Icon ms-Icon--Delete" aria-hidden="true"></i>';
     deleteButton.title = "슬라이드 삭제";
+    deleteButton.dataset.slideId = slide.id;
 
     // 아이콘들을 컨테이너에 추가
     iconsContainer.appendChild(infoButton);
@@ -352,6 +403,10 @@ async function handleExportSlide() {
     await updateJsonFile(result);
     console.log("슬라이드 export 성공");
     console.log(result);
+
+    // 캐시 초기화 - 새로운 슬라이드가 추가되었으므로
+    clearSlidesCache();
+
     location.reload();
   } catch (error) {
     console.error("슬라이드 export 실패:", error);
@@ -369,4 +424,7 @@ export {
   registerPageEventHandlers,
   tryCatch,
   displaySlides,
+  handleInsertSlide,
+  getSlidesData,
+  clearSlidesCache,
 };
