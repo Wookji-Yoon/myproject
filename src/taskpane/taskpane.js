@@ -1,8 +1,15 @@
 /* global document, Office, console, setTimeout, location */
 
-
-import { signIn, createJsonFile, readJsonFile, fileExists, createFolder, updateJsonFile } from "./graphService";
-import { exportSelectedSlideAsBase64, insertAfterSelectedSlide } from "./functions";
+import {
+  signIn,
+  createJsonFile,
+  readJsonFile,
+  fileExists,
+  createFolder,
+  updateJsonFile,
+  isUserLoggedIn,
+} from "./graphService";
+import { exportSelectedSlideAsBase64 } from "./functions";
 import Tagify from "@yaireo/tagify";
 
 Office.onReady((info) => {
@@ -13,8 +20,18 @@ Office.onReady((info) => {
     // 네비게이션 초기화
     initializeNavigation();
 
-    // 기본 페이지 표시
-    showPage("list-page");
+    // 로그인 상태에 따라 기본 페이지 표시
+    tryCatch(async () => {
+      const isLoggedIn = await isUserLoggedIn();
+      if (isLoggedIn) {
+        showPage("list-page");
+      } else {
+        showPage("main-page");
+      }
+    });
+
+    // 모든 페이지의 이벤트 핸들러 등록
+    registerPageEventHandlers("add-page");
 
     // Tagify 초기화는 페이지가 표시된 후에 수행
     // 모든 페이지의 이벤트 핸들러 등록
@@ -118,11 +135,9 @@ Office.onReady((info) => {
     // read-json 버튼이 존재하는 경우에만 이벤트 핸들러 등록
     const readJsonButton = document.getElementById("read-json");
     if (readJsonButton) {
-      readJsonButton.onclick = () => {
-        console.log("read-json 버튼의 onclick이 호출됨");
+      readJsonButton.onclick = () =>
         tryCatch(async () => {
-          // 디버깅 메시지 추가
-          console.log("Read JSON 버튼 클릭됨");
+          console.log("read-json 버튼의 onclick이 호출됨");
           setMessage("JSON 파일 읽기 시작...");
           try {
             // Microsoft Graph 클라이언트 접근 시도로 로그인 상태 확인
@@ -146,7 +161,6 @@ Office.onReady((info) => {
             }
           }
         });
-      };
     }
   }
 });

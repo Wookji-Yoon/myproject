@@ -252,11 +252,11 @@ async function updateJsonFile(jsonData) {
 
   try {
     const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
-    
+
     // 두 태그 배열을 중복 없이 합치기
     const combinedTags = [...new Set([...tagJsonData.tags, ...jsonData.tags])];
     tagJsonData.tags = combinedTags;
-    
+
     // 업데이트된 태그 저장
     await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));
     console.log("Tags updated successfully");
@@ -266,4 +266,24 @@ async function updateJsonFile(jsonData) {
   }
 }
 
-export { initializeMsal, signIn, fileExists, createJsonFile, readJsonFile, updateJsonFile, createFolder };
+async function isUserLoggedIn() {
+  try {
+    await initializeMsal();
+    const account = msalInstance.getActiveAccount();
+    return !!account; // Returns true if account exists, false otherwise
+  } catch (error) {
+    console.error("Error checking login status:", error);
+    return false;
+  }
+}
+
+export {
+  initializeMsal,
+  signIn,
+  fileExists,
+  createJsonFile,
+  readJsonFile,
+  updateJsonFile,
+  createFolder,
+  isUserLoggedIn,
+};

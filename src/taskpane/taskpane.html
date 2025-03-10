@@ -15,7 +15,7 @@
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
   </head>
   <body class="ms-font-m ms-Fabric">
-    <div id="sideload-msg">사이드로드 중...</div>
+    <div id="sideload-msg">로딩 중...</div>
     <div id="app-body" style="display: none">
       <nav class="nav-menu">
         <button class="nav-button" data-page="main-page">메인</button>
@@ -30,16 +30,16 @@
         <div class="page-content main-content">
           <div class="logo-container">
             <img width="120" height="120" src="../../assets/logo-filled.png" alt="MyProject" title="MyProject" />
-            <h2 class="main-title">Powerpoint 장표를 <br>가장 효율적으로 관리해 보세요!</h2>
+            <h2 class="main-title">Powerpoint 장표를 <br />가장 효율적으로 관리해 보세요!</h2>
           </div>
-          
+
           <div class="login-container">
             <button class="ms-Button ms-Button--hero" id="sign-in">
               <svg class="ms-logo" width="16" height="16" viewBox="0 0 23 23">
-                <rect x="1" y="1" width="10" height="10" fill="#ffffff"/>
-                <rect x="1" y="12" width="10" height="10" fill="#ffffff"/>
-                <rect x="12" y="1" width="10" height="10" fill="#ffffff"/>
-                <rect x="12" y="12" width="10" height="10" fill="#ffffff"/>
+                <rect x="1" y="1" width="10" height="10" fill="#ffffff" />
+                <rect x="1" y="12" width="10" height="10" fill="#ffffff" />
+                <rect x="12" y="1" width="10" height="10" fill="#ffffff" />
+                <rect x="12" y="12" width="10" height="10" fill="#ffffff" />
               </svg>
               <span class="ms-Button-label">Microsoft로 시작하기</span>
             </button>
@@ -47,15 +47,13 @@
               <a href="#" class="help-link">도움이 필요하신가요?</a>
             </div>
           </div>
-          
+
           <!-- 메시지 영역 제거 -->
         </div>
       </div>
 
       <div id="list-page" class="page">
         <div class="page-content">
-          <h2>슬라이드 목록</h2>
-          
           <!-- 검색창 UI 추가 (list-page 내부로 이동) -->
           <div id="search-container">
             <div class="search-wrapper">
@@ -74,7 +72,7 @@
               </div>
             </div>
           </div>
-          
+
           <button class="ms-Button" id="read-json">Read JSON</button>
           <button class="ms-Button" id="test-message">테스트 메시지</button><br /><br />
           <section id="slides-list" class="ms-welcome__main">
@@ -83,11 +81,18 @@
                 <!-- 예시 슬라이드 아이템 추가 -->
                 <div class="slide-item">
                   <div class="thumbnail-container">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23eaeaea'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%23999999'%3E샘플 이미지 300x200%3C/text%3E%3C/svg%3E" alt="슬라이드 미리보기" class="slide-thumbnail">
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23eaeaea'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%23999999'%3E샘플 이미지 300x200%3C/text%3E%3C/svg%3E"
+                      alt="슬라이드 미리보기"
+                      class="slide-thumbnail"
+                    />
                     <div class="toggle-icon" id="toggle-info">▼</div>
                   </div>
                   <div class="slide-info">
-                    <p><strong>슬라이드2ㅁㄴㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ 1</strong><span>21-02-07</span></p>
+                    <p>
+                      <strong>슬라이드2ㅁㄴㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ 1</strong
+                      ><span>21-02-07</span>
+                    </p>
                   </div>
                   <div class="tag-list">
                     <span class="tag-item">설명</span>
@@ -101,10 +106,14 @@
                     <span class="tag-item">프레젠테이션</span>
                   </div>
                 </div>
-                
+
                 <div class="slide-item">
                   <div class="thumbnail-container">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23eaeaea'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%23999999'%3E샘플 이미지 300x200%3C/text%3E%3C/svg%3E" alt="슬라이드 미리보기" class="slide-thumbnail">
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23eaeaea'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%23999999'%3E샘플 이미지 300x200%3C/text%3E%3C/svg%3E"
+                      alt="슬라이드 미리보기"
+                      class="slide-thumbnail"
+                    />
                     <div class="toggle-icon">▼</div>
                   </div>
                   <div class="slide-info">
@@ -122,10 +131,14 @@
                     <span class="tag-item">프레젠테이션</span>
                   </div>
                 </div>
-                
+
                 <div class="slide-item">
                   <div class="thumbnail-container">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23eaeaea'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%23999999'%3E샘플 이미지 300x200%3C/text%3E%3C/svg%3E" alt="슬라이드 미리보기" class="slide-thumbnail">
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23eaeaea'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%23999999'%3E샘플 이미지 300x200%3C/text%3E%3C/svg%3E"
+                      alt="슬라이드 미리보기"
+                      class="slide-thumbnail"
+                    />
                     <div class="toggle-icon">▼</div>
                   </div>
                   <div class="slide-info">
@@ -152,18 +165,23 @@
       <div id="add-page" class="page">
         <div class="page-content">
           <h2 class="center-title">슬라이드 추가하기</h2>
-          
+
           <div class="form-container">
             <div class="form-group">
               <label for="slide-title"><span class="required">*</span> 제목</label>
               <input type="text" id="slide-title" class="form-input" required />
             </div>
-            
+
             <div class="form-group">
               <label for="slide-tags">태그</label>
-              <input name="basic" placeholder="엔터로 구분하여 입력" class='tagify--custom-dropdown' value="tag1, tag2">
+              <input
+                name="basic"
+                placeholder="엔터로 구분하여 입력"
+                class="tagify--custom-dropdown"
+                value="tag1, tag2"
+              />
             </div>
-            
+
             <div class="form-button-container">
               <button class="ms-Button ms-Button--primary" id="add-slide-button">슬라이드 추가</button>
             </div>
@@ -171,95 +189,95 @@
         </div>
       </div>
     </div>
-    
+
     <script>
       // 슬라이드 정보 토글 기능
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // 모든 토글 아이콘에 이벤트 리스너 추가
-        const addToggleListeners = function() {
-          const toggleIcons = document.querySelectorAll('.toggle-icon');
-          toggleIcons.forEach(icon => {
+        const addToggleListeners = function () {
+          const toggleIcons = document.querySelectorAll(".toggle-icon");
+          toggleIcons.forEach((icon) => {
             // 이미 이벤트 리스너가 있는지 확인 (data 속성으로 표시)
             if (icon.dataset.hasListener) return;
-            
-            icon.addEventListener('click', function() {
+
+            icon.addEventListener("click", function () {
               // 모든 슬라이드 정보 요소 토글
-              const allSlideInfos = document.querySelectorAll('.slide-info');
-              const allTagLists = document.querySelectorAll('.tag-list');
-              const isCollapsed = allSlideInfos[0]?.classList.contains('collapsed');
-              
+              const allSlideInfos = document.querySelectorAll(".slide-info");
+              const allTagLists = document.querySelectorAll(".tag-list");
+              const isCollapsed = allSlideInfos[0]?.classList.contains("collapsed");
+
               // 토글 아이콘 변경
-              const allToggleIcons = document.querySelectorAll('.toggle-icon');
-              
+              const allToggleIcons = document.querySelectorAll(".toggle-icon");
+
               if (isCollapsed) {
                 // 펼치기
-                allSlideInfos.forEach(info => info.classList.remove('collapsed'));
-                allTagLists.forEach(tags => {
-                  tags.classList.remove('collapsed');
-                  
+                allSlideInfos.forEach((info) => info.classList.remove("collapsed"));
+                allTagLists.forEach((tags) => {
+                  tags.classList.remove("collapsed");
+
                   // 태그가 오버플로우 상태인지 확인하고 클래스 추가
                   if (tags.scrollHeight > tags.clientHeight) {
-                    tags.classList.add('overflowing');
+                    tags.classList.add("overflowing");
                   } else {
-                    tags.classList.remove('overflowing');
+                    tags.classList.remove("overflowing");
                   }
                 });
-                allToggleIcons.forEach(icon => icon.textContent = '▼');
+                allToggleIcons.forEach((icon) => (icon.textContent = "▼"));
               } else {
                 // 접기
-                allSlideInfos.forEach(info => info.classList.add('collapsed'));
-                allTagLists.forEach(tags => tags.classList.add('collapsed'));
-                allToggleIcons.forEach(icon => icon.textContent = '▲');
+                allSlideInfos.forEach((info) => info.classList.add("collapsed"));
+                allTagLists.forEach((tags) => tags.classList.add("collapsed"));
+                allToggleIcons.forEach((icon) => (icon.textContent = "▲"));
               }
             });
-            
+
             // 이벤트 리스너 추가 표시
-            icon.dataset.hasListener = 'true';
+            icon.dataset.hasListener = "true";
           });
         };
-        
+
         // 새로운 슬라이드 아이템이 추가될 때마다 토글 아이콘 복제
-        const addToggleToNewSlides = function() {
-          const slideItems = document.querySelectorAll('.slide-item');
-          slideItems.forEach(item => {
+        const addToggleToNewSlides = function () {
+          const slideItems = document.querySelectorAll(".slide-item");
+          slideItems.forEach((item) => {
             // 이미 토글 아이콘이 있는지 확인
-            if (item.querySelector('.toggle-icon')) return;
-            
+            if (item.querySelector(".toggle-icon")) return;
+
             // 썸네일 컨테이너 찾기 또는 생성
-            let thumbnailContainer = item.querySelector('.thumbnail-container');
-            const thumbnailImg = item.querySelector('.slide-thumbnail');
-            
+            let thumbnailContainer = item.querySelector(".thumbnail-container");
+            const thumbnailImg = item.querySelector(".slide-thumbnail");
+
             // 썸네일 컨테이너가 없고 이미지는 있는 경우
             if (!thumbnailContainer && thumbnailImg) {
               // 썸네일 컨테이너 생성
-              thumbnailContainer = document.createElement('div');
-              thumbnailContainer.className = 'thumbnail-container';
-              
+              thumbnailContainer = document.createElement("div");
+              thumbnailContainer.className = "thumbnail-container";
+
               // 이미지를 컨테이너로 이동
               const imgParent = thumbnailImg.parentNode;
               imgParent.insertBefore(thumbnailContainer, thumbnailImg);
               thumbnailContainer.appendChild(thumbnailImg);
             }
-            
+
             if (thumbnailContainer) {
               // 토글 아이콘 추가
-              const toggleIcon = document.createElement('div');
-              toggleIcon.className = 'toggle-icon';
-              toggleIcon.textContent = '▼';
+              const toggleIcon = document.createElement("div");
+              toggleIcon.className = "toggle-icon";
+              toggleIcon.textContent = "▼";
               thumbnailContainer.appendChild(toggleIcon);
             }
           });
-          
+
           // 새로 추가된 토글 아이콘에 이벤트 리스너 추가
           addToggleListeners();
         };
-        
+
         // 초기 로드 시 실행
         addToggleToNewSlides();
         addToggleListeners();
-        
+
         // 새 슬라이드가 추가될 때를 위한 MutationObserver 설정
-        const slidesContainer = document.getElementById('slides-container');
+        const slidesContainer = document.getElementById("slides-container");
         if (slidesContainer) {
           const observer = new MutationObserver(addToggleToNewSlides);
           observer.observe(slidesContainer, { childList: true, subtree: true });
