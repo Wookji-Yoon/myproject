@@ -604,7 +604,7 @@ b {
 #search-input {
   -ms-flex: 1;
   flex: 1;
-  height: 40px;
+  height: 47px;
   padding: 8px 40px 8px 12px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
@@ -614,6 +614,28 @@ b {
     border-color 0.2s,
     box-shadow 0.2s;
   width: 100%;
+}
+
+/* placeholder 색상 설정 */
+#search-input::placeholder {
+  color: #999999;
+  opacity: 1;
+}
+
+/* Firefox를 위한 설정 */
+#search-input::-moz-placeholder {
+  color: #999999;
+  opacity: 1;
+}
+
+/* Internet Explorer 10-11 */
+#search-input:-ms-input-placeholder {
+  color: #999999;
+}
+
+/* Microsoft Edge */
+#search-input::-ms-input-placeholder {
+  color: #999999;
 }
 
 #search-input:focus {
@@ -787,17 +809,22 @@ b {
 .tagify--custom-dropdown {
   background-color: #ffffff;
   width: 100%;
-  padding: 4px 8px;
+  padding: 4px 0px;
   border: 1px solid #dddddd;
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
 }
+/* Tagify 컴포넌트에 대한 포커스 스타일 추가 */
+.tagify.tagify--focus {
+  border-color: #0078d7 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.25) !important;
+}
 
-.tagify--custom-dropdown:focus {
-  border-color: #0078d7;
+/* 태그 입력 필드에 포커스되었을 때 스타일 */
+.tagify__input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.25);
 }
 
 /* 뒤로가기 버튼 스타일 */

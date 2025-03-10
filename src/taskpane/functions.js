@@ -1,5 +1,5 @@
 /* global PowerPoint, console, document, location */
-import { getSelectedSlideIndex, getSelectedSlideId, setMessage, tryCatch } from "./utils.js";
+import { getSelectedSlideIndex, getSelectedSlideId, setMessage, tryCatch, formatTagOutput } from "./utils.js";
 import {
   signIn,
   createFolder,
@@ -174,7 +174,7 @@ function registerPageEventHandlers(pageId) {
       // Tagify 초기화
       // 기본 태그 입력 필드
       if (tagsInput) {
-        new Tagify(tagsInput, {
+        const tagify = new Tagify(tagsInput, {
           whitelist: [...new Set([...tagJsonData.tags])],
           dropdown: {
             maxItems: 5,
@@ -184,6 +184,16 @@ function registerPageEventHandlers(pageId) {
           },
           maxTags: 10,
         });
+
+        // 포커스 이벤트 핸들러 추가
+        tagify.DOM.input.addEventListener("focus", function () {
+          tagify.DOM.scope.classList.add("tagify--focus");
+        });
+
+        tagify.DOM.input.addEventListener("blur", function () {
+          tagify.DOM.scope.classList.remove("tagify--focus");
+        });
+
         console.log("기본 태그 입력 필드에 Tagify 적용됨");
       }
     });
@@ -219,7 +229,7 @@ function registerPageEventHandlers(pageId) {
       // Tagify 초기화
       // 수정 페이지 태그 입력 필드
       if (editTagsInput) {
-        new Tagify(editTagsInput, {
+        const editTagify = new Tagify(editTagsInput, {
           whitelist: [...new Set([...tagJsonData.tags])],
           dropdown: {
             maxItems: 5,
@@ -229,6 +239,16 @@ function registerPageEventHandlers(pageId) {
           },
           maxTags: 10,
         });
+
+        // 포커스 이벤트 핸들러 추가
+        editTagify.DOM.input.addEventListener("focus", function () {
+          editTagify.DOM.scope.classList.add("tagify--focus");
+        });
+
+        editTagify.DOM.input.addEventListener("blur", function () {
+          editTagify.DOM.scope.classList.remove("tagify--focus");
+        });
+
         console.log("수정 페이지 태그 입력 필드에 Tagify 적용됨");
       }
     });
@@ -657,32 +677,26 @@ async function handleTagSearch(searchTerm) {
     const cache = await getSlideListCache();
     const slides = cache.slides;
 
+    const formattedTag = formatTagOutput(searchTerm);
+
+    console.log("태그 검색 시도:", formattedTag);
+
     if (!slides || slides.length === 0) {
       setMessage("검색할 슬라이드가 없습니다.", "warning");
       return;
     }
 
     // 검색어가 비어있으면 모든 슬라이드 표시
-    if (!searchTerm || searchTerm.trim() === "") {
+    if (!formattedTag === "") {
       displaySlides(slides);
       return;
     }
 
     // 태그에 검색어가 포함된 슬라이드 필터링
+    // 참고로 formattedTag는 string[] 형태이며, slide.tags 또한 string[] 형태이다.
+    // formattedTag의 요소가 하나라도 slide.tags에 포함되어 있으면 해당 슬라이드를 표시
     const filteredSlides = slides.filter((slide) => {
-      if (!slide.tags) return false;
-
-      // 태그 배열인 경우
-      if (Array.isArray(slide.tags)) {
-        return slide.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      }
-
-      // 태그가 문자열인 경우 (쉼표로 구분된 문자열일 수 있음)
-      if (typeof slide.tags === "string") {
-        return slide.tags.toLowerCase().includes(searchTerm.toLowerCase());
-      }
-
-      return false;
+      return formattedTag.some((tag) => slide.tags.includes(tag));
     });
 
     if (filteredSlides.length === 0) {

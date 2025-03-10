@@ -76,46 +76,50 @@ Office.onReady((info) => {
     // 필터 탭 클릭 이벤트
     document.querySelectorAll(".filter-tab").forEach((tab) => {
       tab.onclick = () => {
+        // 이미 활성화된 탭을 클릭한 경우 아무 작업도 하지 않음
+        if (tab.classList.contains("active")) return;
+
+        // 기존 활성화된 탭에서 active 클래스 제거
         document.querySelector(".filter-tab.active").classList.remove("active");
+        // 클릭한 탭에 active 클래스 추가
         tab.classList.add("active");
-        const activeFilter = document.querySelector(".filter-tab.active").getAttribute("data-filter");
-        const searchInputContainer = document.getElementById("search-input").parentElement;
-        const originalInput = document.getElementById("search-input");
 
-        // 기존 입력 필드 완전히 제거하고 새로 생성
-        if (originalInput) {
-          const newInput = document.createElement("input");
-          newInput.id = "search-input";
-          newInput.type = "text";
-          newInput.placeholder = activeFilter === "title" ? "제목으로 검색..." : "태그로 검색...";
-          newInput.className = originalInput.className;
+        const activeFilter = tab.getAttribute("data-filter");
+        const searchInput = document.getElementById("search-input");
 
-          searchInputContainer.removeChild(originalInput);
-          searchInputContainer.insertBefore(newInput, searchInputContainer.firstChild);
+        // 이미 Tagify가 초기화된 경우 파괴
+        if (searchInput.tagify) {
+          searchInput.tagify.destroy();
+        }
 
-          // 엔터키 이벤트 다시 등록
-          newInput.addEventListener("keypress", (event) => {
+        // 기존 input 요소의 클래스와 값 초기화
+        searchInput.className = activeFilter === "tag" ? "tagify--custom-dropdown" : "";
+        searchInput.value = "";
+
+        if (activeFilter === "title") {
+          searchInput.addEventListener("keypress", (event) => {
             if (event.key === "Enter") {
               document.getElementById("search-button").click();
             }
           });
+        }
 
-          if (activeFilter === "tag") {
-            tryCatch(async () => {
-              const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
-              console.log("태그 JSON 데이터 읽기 성공:", tagJsonData);
-              new Tagify(newInput, {
-                whitelist: [...new Set([...tagJsonData.tags])],
-                dropdown: {
-                  maxItems: 5,
-                  classname: "tags-look",
-                  enabled: 0,
-                  clearOnSelect: false,
-                },
-                enforceWhitelist: true,
-              });
+        // 태그 필터인 경우 Tagify 초기화
+        if (activeFilter === "tag") {
+          tryCatch(async () => {
+            const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+            console.log("태그 JSON 데이터 읽기 성공:", tagJsonData);
+            searchInput.tagify = new Tagify(searchInput, {
+              whitelist: [...new Set([...tagJsonData.tags])],
+              dropdown: {
+                maxItems: 5,
+                classname: "tags-look",
+                enabled: 0,
+                clearOnSelect: true,
+              },
+              enforceWhitelist: true,
             });
-          }
+          });
         }
       };
     });
@@ -148,12 +152,6 @@ Office.onReady((info) => {
           await handleTagSearch(searchInput.value);
         }
       });
-    // 검색 입력창 엔터키 이벤트
-    document.getElementById("search-input").addEventListener("keypress", (event) => {
-      if (event.key === "Enter") {
-        document.getElementById("search-button").click();
-      }
-    });
 
     // 3. add-page에서 슬라이드 추가하기 버튼 클릭시 export 처리
     document.getElementById("add-slide-button").onclick = () =>

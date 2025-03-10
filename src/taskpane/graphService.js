@@ -240,8 +240,8 @@ async function updateJsonFile(jsonData) {
     // 기존존 JSON 파일 읽기
     const existingData = await readJsonFile();
 
-    // 새 슬라이드 추가
-    existingData.slides.push(jsonData);
+    // 새 슬라이드를 기존 슬라이드 목록의 가장 앞에 추가
+    existingData.slides.unshift(jsonData);
 
     // Microsoft Graph API를 사용하여 파일 업데이트
     await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(existingData, null, 2));
@@ -257,7 +257,12 @@ async function updateJsonFile(jsonData) {
 
     // 두 태그 배열을 합치기 (중복 허용용)
     const combinedTags = [...tagJsonData.tags, ...jsonData.tags];
-    tagJsonData.tags = combinedTags;
+
+    //combinedTags를 가나다순으로 정렬
+    combinedTags.sort();
+    const uniqueTags = [...new Set(combinedTags)];
+
+    tagJsonData.tags = uniqueTags;
 
     // 업데이트된 태그 저장
     await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));

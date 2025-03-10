@@ -105,6 +105,11 @@ function subtractArrays(A, B) {
   return A;
 }
 
+function formatTagOutput(output) {
+  const parsed = JSON.parse(output);
+  return parsed.map((item) => item.value);
+}
+
 export {
   getSelectedSlideIndex,
   getSelectedSlideId,
@@ -113,4 +118,5 @@ export {
   tryCatch,
   createJsonData,
   subtractArrays,
+  formatTagOutput,
 };
