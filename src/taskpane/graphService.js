@@ -3,6 +3,8 @@
 import * as msal from "@azure/msal-browser";
 import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
 
+import { subtractArrays } from "./utils";
+
 const msalConfig = {
   auth: {
     clientId: "b8f7e758-dbc0-404c-886b-72f7fb9a3414", // 기존 클라이언트 ID 그대로 사용
@@ -235,7 +237,7 @@ async function updateJsonFile(jsonData) {
   const client = await getGraphClient();
 
   try {
-    // 기졸 JSON 파일 읽기
+    // 기존존 JSON 파일 읽기
     const existingData = await readJsonFile();
 
     // 새 슬라이드 추가
@@ -253,8 +255,8 @@ async function updateJsonFile(jsonData) {
   try {
     const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
 
-    // 두 태그 배열을 중복 없이 합치기
-    const combinedTags = [...new Set([...tagJsonData.tags, ...jsonData.tags])];
+    // 두 태그 배열을 합치기 (중복 허용용)
+    const combinedTags = [...tagJsonData.tags, ...jsonData.tags];
     tagJsonData.tags = combinedTags;
 
     // 업데이트된 태그 저장
@@ -262,6 +264,34 @@ async function updateJsonFile(jsonData) {
     console.log("Tags updated successfully");
   } catch (error) {
     console.error("Error updating tags:", error);
+    throw error;
+  }
+}
+
+async function deleteOneSlideJsonFile(slideId) {
+  const client = await getGraphClient();
+  const existingData = await readJsonFile();
+
+  try {
+    //삭제할 슬라이드 찾아서 제거
+    const updatedData = existingData.slides.filter((slide) => slide.id !== slideId);
+    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(updatedData, null, 2));
+  } catch (error) {
+    console.error("Error deleting slide:", error);
+    throw error;
+  }
+
+  try {
+    // 태그목록에서 제거
+    const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+
+    const targetSlide = existingData.slides.find((slide) => slide.id === slideId);
+    const deletedTags = targetSlide.tags;
+    const updatedTags = subtractArrays(tagJsonData.tags, deletedTags);
+
+    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(updatedTags, null, 2));
+  } catch (error) {
+    console.error("Error deleting tags:", error);
     throw error;
   }
 }
@@ -285,5 +315,6 @@ export {
   readJsonFile,
   updateJsonFile,
   createFolder,
+  deleteOneSlideJsonFile,
   isUserLoggedIn,
 };

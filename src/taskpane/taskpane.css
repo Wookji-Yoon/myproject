@@ -102,7 +102,9 @@ b {
   margin-top: -7px;
   margin-bottom: 0px;
   padding: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
   max-height: 300px;
   overflow: hidden;
   opacity: 1;
@@ -151,6 +153,55 @@ b {
   border-radius: 8px;
 }
 
+/* 새로 추가한 아이콘 스타일 */
+.slide-icons-container {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 5px;
+}
+
+.slide-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.slide-icon .ms-Icon {
+  font-size: 12px;
+}
+
+.edit-icon {
+  color: #767676; /* 회색 아이콘 */
+}
+
+.delete-icon {
+  color: #666666;
+}
+
+.slide-icon:hover {
+  transform: scale(1.1);
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.delete-icon:hover {
+  color: #d83b01; /* 마우스 오버시 빨간색으로 변경 */
+}
+
+.edit-icon:hover {
+  color: #000000; /* 마우스 오버시 검정색으로 변경 */
+}
+
 .slide-title {
   color: #000000;
   font-weight: bold;
@@ -176,7 +227,9 @@ b {
   margin-top: -5px;
   margin-bottom: 10px;
   padding: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
   max-height: 46px; /* 태그 두 줄 정도의 높이 (태그 높이 + 여백) */
   overflow: hidden;
   opacity: 1;
@@ -297,7 +350,7 @@ b {
 
 /* 버튼 스타일 수정 - Twitter 색상으로 변경 */
 #sign-in.ms-Button--hero {
-  background-color: #1DA1F2 !important;
+  background-color: #1da1f2 !important;
   border: none !important;
   color: white !important;
   font-size: 14px;
@@ -414,7 +467,7 @@ b {
 
 .login-container {
   position: absolute;
-  bottom:0px;
+  bottom: 0px;
   left: 0;
   right: 0;
   width: 100%;
@@ -483,19 +536,22 @@ b {
   left: 10px;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   z-index: 5;
 }
 
 .toggle-icon:hover {
   background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
 }
 
 .slide-info.collapsed {
@@ -547,7 +603,9 @@ b {
   border-radius: 6px;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   width: 100%;
 }
 
@@ -681,7 +739,7 @@ b {
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
-  height:45px;
+  height: 45px;
 }
 
 .form-input:focus {
