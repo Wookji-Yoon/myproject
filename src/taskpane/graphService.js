@@ -302,6 +302,30 @@ async function deleteOneSlideJsonFile(slideId) {
   }
 }
 
+async function editJsonFile(updatedSlide) {
+  const client = await getGraphClient();
+
+  try {
+    const existingData = await readJsonFile();
+    existingData.slides.find((slide) => slide.id === updatedSlide.id).title = updatedSlide.title;
+    existingData.slides.find((slide) => slide.id === updatedSlide.id).tags = updatedSlide.tags;
+    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(existingData, null, 2));
+  } catch (error) {
+    console.error("Error editing JSON file:", error);
+    throw error;
+  }
+
+  try {
+    const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+    const combinedTags = [...tagJsonData.tags, ...updatedSlide.tags];
+    tagJsonData.tags = combinedTags;
+    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));
+  } catch (error) {
+    console.error("Error editing tags:", error);
+    throw error;
+  }
+}
+
 async function isUserLoggedIn() {
   try {
     await initializeMsal();
@@ -322,5 +346,6 @@ export {
   updateJsonFile,
   createFolder,
   deleteOneSlideJsonFile,
+  editJsonFile,
   isUserLoggedIn,
 };

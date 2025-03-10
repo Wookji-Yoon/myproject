@@ -21,6 +21,7 @@
         <button class="nav-button" data-page="main-page">메인</button>
         <button class="nav-button" data-page="list-page">슬라이드 목록</button>
         <button class="nav-button" data-page="add-page">슬라이드 추가</button>
+        <button class="nav-button" data-page="edit-page">수정하기</button>
       </nav>
 
       <!-- 공통 메시지 영역 추가 -->
@@ -83,7 +84,12 @@
 
       <div id="add-page" class="page">
         <div class="page-content">
-          <h2 class="center-title">슬라이드 추가하기</h2>
+          <div class="title-container">
+            <button class="back-button" id="add-page-back">
+              <i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
+            </button>
+            <h2 class="center-title">슬라이드 추가하기</h2>
+          </div>
 
           <div class="form-container">
             <div class="form-group">
@@ -102,11 +108,54 @@
           </div>
         </div>
       </div>
+
+      <div id="edit-page" class="page">
+        <div class="page-content">
+          <div class="title-container">
+            <button class="back-button" id="edit-page-back">
+              <i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
+            </button>
+            <h2 class="center-title">슬라이드 수정하기</h2>
+          </div>
+
+          <!-- 슬라이드 썸네일 이미지 추가 -->
+          <div class="edit-thumbnail-container">
+            <img id="edit-slide-thumbnail" class="edit-slide-thumbnail" alt="슬라이드 썸네일" />
+          </div>
+
+          <div class="form-container">
+            <div class="form-group">
+              <label for="edit-slide-title"><span class="required">*</span> 제목</label>
+              <input type="text" id="edit-slide-title" class="form-input" placeholder="제목을 입력하세요" required />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-slide-tags">태그</label>
+              <input name="edit-tags" placeholder="엔터로 구분하여 입력하세요" class="tagify--custom-dropdown" />
+            </div>
+
+            <div class="form-button-container">
+              <button class="ms-Button ms-Button--primary" id="edit-slide-button">슬라이드 수정하기</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
       // 슬라이드 정보 토글 기능
       document.addEventListener("DOMContentLoaded", function () {
+        // 뒤로가기 버튼에 이벤트 리스너 추가
+        document.getElementById("add-page-back").addEventListener("click", function () {
+          // showPage 함수 호출
+          window.showPage("list-page");
+        });
+
+        document.getElementById("edit-page-back").addEventListener("click", function () {
+          // showPage 함수 호출
+          window.showPage("list-page");
+        });
+
         // 모든 토글 아이콘에 이벤트 리스너 추가
         const addToggleListeners = function () {
           const toggleIcons = document.querySelectorAll(".toggle-icon");

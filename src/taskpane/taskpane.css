@@ -756,8 +756,26 @@ b {
 }
 
 .form-button-container {
-  margin-top: 150px;
+  margin-top: 120px;
   text-align: center;
+}
+
+.edit-thumbnail-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.edit-slide-thumbnail {
+  width: 100%;
+  object-fit: contain;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #add-slide-button {
@@ -780,4 +798,36 @@ b {
   border-color: #0078d7;
   outline: none;
   box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.25);
+}
+
+/* 뒤로가기 버튼 스타일 */
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.back-button {
+  position: absolute;
+  left: 5px;
+  display: flex;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #000;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 600;
+}
+
+.center-title {
+  margin: 0 auto;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
 }
