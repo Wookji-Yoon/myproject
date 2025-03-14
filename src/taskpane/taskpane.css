@@ -400,7 +400,9 @@ b {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 100;
-  transition: background-color 0.2s, transform 0.2s;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .add-circle-button:hover {
@@ -657,10 +659,10 @@ b {
   margin-bottom: 8px;
 }
 
-#search-input {
+.search-input {
   -ms-flex: 1;
   flex: 1;
-  height: 47px;
+  min-height: 47px;
   padding: 8px 40px 8px 12px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
@@ -673,33 +675,33 @@ b {
 }
 
 /* placeholder 색상 설정 */
-#search-input::placeholder {
+.search-input::placeholder {
   color: #999999;
   opacity: 1;
 }
 
 /* Firefox를 위한 설정 */
-#search-input::-moz-placeholder {
+.search-input::-moz-placeholder {
   color: #999999;
   opacity: 1;
 }
 
 /* Internet Explorer 10-11 */
-#search-input:-ms-input-placeholder {
+.search-input:-ms-input-placeholder {
   color: #999999;
 }
 
 /* Microsoft Edge */
-#search-input::-ms-input-placeholder {
+.search-input::-ms-input-placeholder {
   color: #999999;
 }
 
-#search-input:focus {
+.search-input:focus {
   border-color: #0078d4;
   box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
 }
 
-#search-button {
+.search-button {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -724,11 +726,11 @@ b {
   transition: background-color 0.2s;
 }
 
-#search-button:hover {
+.search-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-#search-button .ms-Icon--Search {
+.search-button .ms-Icon--Search {
   font-size: 16px;
   color: #666;
 }
@@ -838,6 +840,7 @@ b {
   text-align: center;
 }
 
+.add-thumbnail-container,
 .edit-thumbnail-container {
   width: 100%;
   max-width: 600px;
@@ -848,6 +851,7 @@ b {
   overflow: hidden;
 }
 
+.add-slide-thumbnail,
 .edit-slide-thumbnail {
   width: 100%;
   object-fit: contain;
@@ -880,7 +884,7 @@ b {
 .tagify--custom-dropdown {
   background-color: #ffffff;
   width: 100%;
-  padding: 4px 0px;
+  padding: 4px 40px 4px 0px;
   border: 1px solid #dddddd;
   border-radius: 4px;
   font-size: 14px;
@@ -928,4 +932,8 @@ b {
   text-align: center;
   display: inline-block;
   width: 100%;
+}
+
+.hidden {
+  display: none !important;
 }

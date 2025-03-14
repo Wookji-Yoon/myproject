@@ -89,72 +89,50 @@ Office.onReady((info) => {
         // 클릭한 탭에 active 클래스 추가
         tab.classList.add("active");
 
-        const activeFilter = tab.getAttribute("data-filter");
-        const searchInput = document.getElementById("search-input");
-
-        // 이미 Tagify가 초기화된 경우 파괴
-        if (searchInput.tagify) {
-          searchInput.tagify.destroy();
-        }
-
-        // 기존 input 요소의 클래스와 값 초기화
-        searchInput.className = activeFilter === "tag" ? "tagify--custom-dropdown" : "";
-        searchInput.value = "";
-
-        if (activeFilter === "title") {
-          searchInput.addEventListener("keypress", (event) => {
-            if (event.key === "Enter") {
-              document.getElementById("search-button").click();
-            }
-          });
-        }
-
-        // 태그 필터인 경우 Tagify 초기화
-        if (activeFilter === "tag") {
-          tryCatch(async () => {
-            const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
-            console.log("태그 JSON 데이터 읽기 성공:", tagJsonData);
-            searchInput.tagify = new Tagify(searchInput, {
-              whitelist: [...new Set([...tagJsonData.tags])],
-              dropdown: {
-                maxItems: 5,
-                classname: "tags-look",
-                enabled: 0,
-                clearOnSelect: true,
-              },
-              enforceWhitelist: true,
-            });
-          });
+        if (tab.getAttribute("data-filter") === "title") {
+          document.getElementById("tag-search-input").value = "";
+          document.getElementById("tag-search-wrapper").classList.add("hidden");
+          document.getElementById("title-search-wrapper").classList.remove("hidden");
+        } else {
+          document.getElementById("title-search-input").value = "";
+          document.getElementById("title-search-wrapper").classList.add("hidden");
+          document.getElementById("tag-search-wrapper").classList.remove("hidden");
         }
       };
     });
 
     // 검색 버튼 클릭 이벤트
-    document.getElementById("search-button").onclick = () =>
+    document.getElementById("title-search-button").onclick = () =>
       tryCatch(async () => {
-        const searchInput = document.getElementById("search-input");
-        const activeFilter = document.querySelector(".filter-tab.active").getAttribute("data-filter");
+        const searchInput = document.getElementById("title-search-input");
+        const searchButton = document.getElementById("title-search-button");
+
+        //UI 처리
         searchInput.blur();
-        //searchinput 1초 동안 비활성화
         searchInput.disabled = true;
+        searchButton.innerHTML = '<i class="ms-Icon ms-Icon--ProgressRingDots" aria-hidden="true"></i>';
+
+        //0.5초뒤 복구
         setTimeout(() => {
           searchInput.disabled = false;
-        }, 1000);
-        //1초 동안 뒤에 검색 버튼을 spinner로 변경
-        document.getElementById("search-button").innerHTML =
-          '<i class="ms-Icon ms-Icon--ProgressRingDots" aria-hidden="true"></i>';
-        setTimeout(() => {
-          document.getElementById("search-button").innerHTML =
-            '<i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i>';
-        }, 1000);
+          searchButton.innerHTML = '<i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i>';
+        }, 500);
 
-        if (activeFilter === "title") {
-          await handleTitleSearch(searchInput.value);
-          //input에 되어있는 focus 제거
-        } else if (activeFilter === "tag") {
-          await handleTagSearch(searchInput.value);
-        }
+        await handleTitleSearch(searchInput.value);
       });
+
+    // 태그 검색 버튼 클릭 이벤트
+    document.getElementById("tag-search-button").onclick = () =>
+      tryCatch(async () => {
+        const searchInput = document.getElementById("tag-search-input");
+        await handleTagSearch(searchInput.value);
+      });
+
+    document.getElementById("title-search-input").addEventListener("keyup", (event) => {
+      if (event.key === "Enter") {
+        document.getElementById("title-search-button").click();
+      }
+    });
 
     // 3. add-page에서 슬라이드 추가하기 버튼 클릭시 export 처리
     document.getElementById("add-slide-button").onclick = () =>

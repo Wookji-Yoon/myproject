@@ -70,13 +70,7 @@ function goToLastSlide() {
   });
 }
 
-function goToNextSlide() {
-  Office.context.document.goToByIdAsync(Office.Index.Next, Office.GoToType.Index, (asyncResult) => {
-    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-      setMessage("Error: " + asyncResult.error.message);
-    }
-  });
-}
+
 
 function goToPreviousSlide() {
   Office.context.document.goToByIdAsync(Office.Index.Previous, Office.GoToType.Index, (asyncResult) => {

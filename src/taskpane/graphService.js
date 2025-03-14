@@ -246,15 +246,17 @@ async function updateJsonFile(jsonData) {
 
   try {
     const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+    console.log("tagJsonData", tagJsonData);
+    console.log("jsonData", jsonData);
 
     // 두 태그 배열을 합치기 (중복 허용용)
     const combinedTags = [...tagJsonData.tags, ...jsonData.tags];
+    console.log("combinedTags", combinedTags);
 
     //combinedTags를 가나다순으로 정렬
-    combinedTags.sort();
-    const uniqueTags = [...new Set(combinedTags)];
+    const sortTags = combinedTags.sort();
 
-    tagJsonData.tags = uniqueTags;
+    tagJsonData.tags = sortTags;
 
     // 업데이트된 태그 저장
     await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));

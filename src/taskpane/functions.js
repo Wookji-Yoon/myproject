@@ -1,4 +1,5 @@
-/* global PowerPoint, console, document, location */
+/* global Office, PowerPoint, console, document, location */
+
 import { getSelectedSlideIndex, getSelectedSlideId, setMessage, tryCatch, formatTagOutput } from "./utils.js";
 import {
   signIn,
@@ -12,6 +13,29 @@ import {
 } from "./graphService";
 import Tagify from "@yaireo/tagify";
 import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache, updateSlideListCache } from "./state";
+
+async function getBase64Image() {
+  return new Promise((resolve, reject) => {
+    PowerPoint.run(async (context) => {
+      const selectedSlideIndex = await getSelectedSlideIndex();
+      const realSlideIndex = selectedSlideIndex - 1;
+
+      const selectedSlide = context.presentation.slides.getItemAt(realSlideIndex);
+
+      const thumbnail = selectedSlide.getImageAsBase64({
+        options: {
+          height: 100,
+        },
+      });
+
+      await context.sync();
+
+      resolve(thumbnail.m_value);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
 
 /**
  * 주어진 태그 딕셔너리를 슬라이드에 추가하는 함수
@@ -30,26 +54,17 @@ async function exportSelectedSlideAsBase64(formData) {
       // 슬라이드 내보내기
       const slideExport = selectedSlide.exportAsBase64();
 
-      // 썸네일 저장하기
-      const thumbnail = selectedSlide.getImageAsBase64({
-        options: {
-          height: 100,
-        },
-      });
-      console.log(formData);
-      const { title, tags, timestamp } = formData;
-      console.log(title, tags, timestamp);
-
       await context.sync();
+
+      const { title, tags, timestamp, thumbnail } = formData;
 
       // Base64 값 추출
       const slideBase64Value = slideExport.m_value || slideExport;
-      const thumbnailBase64Value = thumbnail.m_value;
 
       resolve({
         id: new Date().getTime().toString(), // 고유 ID 생성
         slide: slideBase64Value,
-        thumbnail: thumbnailBase64Value,
+        thumbnail: thumbnail,
         title: title,
         tags: tags,
         saved_at: timestamp,
@@ -89,11 +104,21 @@ async function handleInsertSlide(slideId) {
     // 슬라이드 삽입
     await insertAfterSelectedSlide(jsonData.slides, slideId);
 
+    //삽입된 슬라이드로 이동
+    goToNextSlide();
+
     setMessage(`슬라이드 ${slideId}가 성공적으로 삽입되었습니다`);
   } catch (error) {
     console.error("슬라이드 삽입 실패:", error);
     setMessage("슬라이드 삽입에 실패했습니다: " + error.message);
   }
+}
+function goToNextSlide() {
+  Office.context.document.goToByIdAsync(Office.Index.Next, Office.GoToType.Index, (asyncResult) => {
+    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+      setMessage("Error: " + asyncResult.error.message);
+    }
+  });
 }
 
 /**
@@ -153,6 +178,34 @@ function registerPageEventHandlers(pageId) {
         setMessage("JSON 파일 읽기 중 오류가 발생했습니다: " + error.message);
       }
     });
+
+    tryCatch(async () => {
+      const searchInput = document.querySelector("input[id=tag-search-input]");
+
+      // 이미 Tagify가 초기화되었는지 확인
+      if (!searchInput.tagify) {
+        const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
+        console.log("태그 JSON 데이터 읽기 성공:", tagJsonData);
+        searchInput.tagify = new Tagify(searchInput, {
+          whitelist: [...new Set([...tagJsonData.tags])],
+          dropdown: {
+            maxItems: 5,
+            classname: "tags-look",
+            enabled: 0,
+            clearOnSelect: true,
+          },
+          enforceWhitelist: true,
+        });
+
+        // Tagify change 이벤트 리스너 추가
+        searchInput.addEventListener("change", function (e) {
+          tryCatch(async () => {
+            console.log("태그 검색 시도:", e.target.value);
+            await handleTagSearch(e.target.value);
+          });
+        });
+      }
+    });
   } else if (pageId === "add-page") {
     // add-page 페이지에 대한 이벤트 핸들러
     console.log("add-page 이벤트 핸들러 등록");
@@ -193,6 +246,12 @@ function registerPageEventHandlers(pageId) {
         tagify.DOM.input.addEventListener("blur", function () {
           tagify.DOM.scope.classList.remove("tagify--focus");
         });
+
+        // 썸네일 이미지 추가
+        const thumbnailImg = document.querySelector("#add-slide-thumbnail");
+        const base64 = await getBase64Image();
+        thumbnailImg.src = `data:image/png;base64,${base64}`;
+        console.log("썸네일 이미지 설정 완료");
 
         console.log("기본 태그 입력 필드에 Tagify 적용됨");
       }
@@ -416,47 +475,17 @@ async function handleExportSlide() {
   try {
     // Tagify로 생성된 태그 요소 가져오기
     const tagifyInput = document.querySelector('input[name="basic"]');
-    let tags = [];
-
-    // Tagify 인스턴스가 있는 경우
-    if (tagifyInput && tagifyInput.tagify) {
-      // tagify의 값을 단순 문자열 배열로 변환
-      tags = tagifyInput.tagify.value.map((item) => item.value || "");
-    }
-    // Tagify 값이 문자열로 존재하는 경우 (JSON 문자열일 수 있음)
-    else if (tagifyInput && tagifyInput.value && tagifyInput.value.trim()) {
-      try {
-        // JSON 형식인지 확인
-        if (tagifyInput.value.startsWith("[") && tagifyInput.value.includes("value")) {
-          const parsedTags = JSON.parse(tagifyInput.value);
-          tags = parsedTags.map((item) => item.value || "");
-        } else {
-          // 일반 쉼표로 구분된 텍스트
-          tags = tagifyInput.value
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag);
-        }
-      } catch (e) {
-        console.error("태그 파싱 오류:", e);
-        // 파싱 오류 시 원본 텍스트를 쉼표로 분리
-        tags = tagifyInput.value
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag);
-      }
-    }
-
-    // 빈 문자열 태그 제거
-    tags = tags.filter((tag) => tag);
+    const formattedTags = formatTagOutput(tagifyInput.value);
+    const thumbnail = document.querySelector("#add-slide-thumbnail");
+    const thumbnailBase64 = thumbnail.src.split(",")[1];
 
     // 폼 데이터 객체 생성
     const formData = {
       title: slideTitle,
-      tags: tags,
+      tags: formattedTags,
       timestamp: new Date().toISOString(),
+      thumbnail: thumbnailBase64,
     };
-
     // 콘솔에 데이터 출력
     console.log("슬라이드 추가 폼 데이터:", formData);
 
@@ -464,27 +493,16 @@ async function handleExportSlide() {
     const result = await exportSelectedSlideAsBase64(formData);
     await updateJsonFile(result);
     console.log("슬라이드 export 성공");
-    console.log(result);
-
-    // 캐시 초기화 - 새로운 슬라이드가 추가되었으므로
-    clearSlideListCache();
-    location.reload();
-
-    // 폼 초기화
-    slideTitleInput.value = "";
-    if (tagifyInput && tagifyInput.tagify) {
-      tagifyInput.tagify.removeAllTags();
-    }
 
     // 메시지 표시
     setMessage("슬라이드가 성공적으로 추가되었습니다!");
 
-    // 목록 페이지로 이동
-    showPage("list-page");
+    // 캐시 초기화 - 새로운 슬라이드가 추가되었으므로
+    clearSlideListCache();
+    location.reload();
   } catch (error) {
     console.error("슬라이드 내보내기 오류:", error);
     setMessage("슬라이드 내보내기에 실패했습니다: " + error.message);
-  } finally {
     // 버튼 원래 상태로 복원
     addButton.textContent = originalButtonText;
     addButton.classList.remove("loading");
@@ -538,43 +556,11 @@ async function handleEditSlide() {
   try {
     // Tagify로 생성된 태그 요소 가져오기
     const tagifyInput = document.querySelector('input[name="edit-tags"]');
-    let tags = [];
-
-    // Tagify 인스턴스가 있는 경우
-    if (tagifyInput && tagifyInput.tagify) {
-      // tagify의 값을 단순 문자열 배열로 변환
-      tags = tagifyInput.tagify.value.map((item) => item.value || "");
-    }
-    // Tagify 값이 문자열로 존재하는 경우 (JSON 문자열일 수 있음)
-    else if (tagifyInput && tagifyInput.value && tagifyInput.value.trim()) {
-      try {
-        // JSON 형식인지 확인
-        if (tagifyInput.value.startsWith("[") && tagifyInput.value.includes("value")) {
-          const parsedTags = JSON.parse(tagifyInput.value);
-          tags = parsedTags.map((item) => item.value || "");
-        } else {
-          // 일반 쉼표로 구분된 텍스트
-          tags = tagifyInput.value
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag);
-        }
-      } catch (e) {
-        console.error("태그 파싱 오류:", e);
-        // 파싱 오류 시 원본 텍스트를 쉼표로 분리
-        tags = tagifyInput.value
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag);
-      }
-    }
-
-    // 빈 문자열 태그 제거
-    tags = tags.filter((tag) => tag);
+    const formattedTags = formatTagOutput(tagifyInput.value);
 
     const updatedSlide = await getSlideCache();
     updatedSlide.title = slideTitle;
-    updatedSlide.tags = tags;
+    updatedSlide.tags = formattedTags;
     await editJsonFile(updatedSlide);
     console.log("슬라이드 수정 성공");
 
@@ -690,6 +676,8 @@ async function handleTitleSearch(searchTerm) {
  * @param {string} searchTerm - 검색할 태그
  */
 async function handleTagSearch(searchTerm) {
+  const tagSearchButton = document.getElementById("tag-search-button");
+
   try {
     // 캐시된 슬라이드 목록 가져오기
     const cache = await getSlideListCache();
@@ -699,13 +687,9 @@ async function handleTagSearch(searchTerm) {
 
     console.log("태그 검색 시도:", formattedTag);
 
-    if (!slides || slides.length === 0) {
-      setMessage("검색할 슬라이드가 없습니다.", "warning");
-      return;
-    }
-
-    // 검색어가 비어있으면 모든 슬라이드 표시
-    if (!formattedTag === "") {
+    // 태그가가 비어있으면 모든 슬라이드 표시
+    if (formattedTag.length === 0) {
+      tagSearchButton.innerHTML = '<i class="ms-Icon ms-Icon--Filter" aria-hidden="true"></i>';
       displaySlides(slides);
       return;
     }
@@ -716,15 +700,8 @@ async function handleTagSearch(searchTerm) {
     const filteredSlides = slides.filter((slide) => {
       return formattedTag.some((tag) => slide.tags.includes(tag));
     });
-
-    if (filteredSlides.length === 0) {
-      setMessage(`"${searchTerm}" 태그 검색 결과가 없습니다.`, "info");
-      // 검색 결과가 없어도 빈 배열로 표시하여 UI 갱신
-      displaySlides([]);
-    } else {
-      setMessage("", "none"); // 메시지 지우기
-      displaySlides(filteredSlides);
-    }
+    displaySlides(filteredSlides);
+    tagSearchButton.innerHTML = '<i class="ms-Icon ms-Icon--FilterSolid" aria-hidden="true"></i>';
   } catch (error) {
     setMessage(`태그 검색 중 오류가 발생했습니다: ${error.message}`, "error");
     console.error("태그 검색 오류:", error);

@@ -17,7 +17,7 @@
   <body class="ms-font-m ms-Fabric">
     <div id="sideload-msg">로딩 중...</div>
     <div id="app-body" style="display: none">
-    <nav class="nav-menu">
+      <nav class="nav-menu">
         <button class="nav-button" data-page="main-page">메인</button>
         <button class="nav-button" data-page="list-page">슬라이드 목록</button>
         <button class="nav-button" data-page="add-page">슬라이드 추가</button>
@@ -55,14 +55,25 @@
         <div class="page-content">
           <!-- 검색창 UI 추가 (list-page 내부로 이동) -->
           <div id="search-container">
-            <div class="search-wrapper">
-              <input type="text" id="search-input" placeholder="슬라이드 검색..." />
-              <button id="search-button" class="ms-Button">
+            <div class="search-wrapper" id="title-search-wrapper">
+              <input type="text" id="title-search-input" class="search-input" placeholder="제목으로 검색..." />
+              <button id="title-search-button" class="search-button ms-Button">
                 <i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i>
               </button>
             </div>
+            <div class="search-wrapper hidden" id="tag-search-wrapper">
+              <input
+                type="text"
+                id="tag-search-input"
+                class="search-input tagify--custom-dropdown"
+                placeholder="태그로 검색..."
+              />
+              <button id="tag-search-button" class="search-button ms-Button">
+                <i class="ms-Icon ms-Icon--Filter" aria-hidden="true"></i>
+              </button>
+            </div>
             <div class="filter-options">
-              <span class="filter-label">필터:</span>
+              <span class="filter-label">구분:</span>
               <div class="filter-tabs">
                 <button class="filter-tab active" data-filter="title">제목</button>
                 <button class="filter-tab" data-filter="tag">태그</button>
@@ -90,6 +101,11 @@
             <h2 class="center-title">슬라이드 추가하기</h2>
           </div>
 
+          <!-- 슬라이드 썸네일 이미지 추가 -->
+          <div class="add-thumbnail-container">
+            <img id="add-slide-thumbnail" class="add-slide-thumbnail" alt="슬라이드 썸네일" />
+          </div>
+
           <div class="form-container">
             <div class="form-group">
               <label for="slide-title"><span class="required">*</span> 제목</label>
@@ -102,7 +118,9 @@
             </div>
 
             <div class="form-button-container">
-              <button class="ms-Button ms-Button--primary action-button" id="add-slide-button">슬라이드 추가하기</button>
+              <button class="ms-Button ms-Button--primary action-button" id="add-slide-button">
+                슬라이드 추가하기
+              </button>
             </div>
           </div>
         </div>
@@ -134,7 +152,9 @@
             </div>
 
             <div class="form-button-container">
-              <button class="ms-Button ms-Button--primary action-button" id="edit-slide-button">슬라이드 수정하기</button>
+              <button class="ms-Button ms-Button--primary action-button" id="edit-slide-button">
+                슬라이드 수정하기
+              </button>
             </div>
           </div>
         </div>

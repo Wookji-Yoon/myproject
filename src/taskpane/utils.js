@@ -106,6 +106,9 @@ function subtractArrays(A, B) {
 }
 
 function formatTagOutput(output) {
+  if (output === "") {
+    return "";
+  }
   const parsed = JSON.parse(output);
   return parsed.map((item) => item.value);
 }

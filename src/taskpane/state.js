@@ -29,7 +29,7 @@ async function getSlideListCache() {
 async function updateSlideListCache(slideId) {
   const slideList = await getSlideListCache();
   const updatedSlideList = slideList.slides.filter((slide) => slide.id !== slideId);
-  slideListCache = updatedSlideList;
+  slideListCache = { slides: updatedSlideList };
   return slideListCache;
 }
 
