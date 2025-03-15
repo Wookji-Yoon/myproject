@@ -245,18 +245,12 @@ b {
 }
 
 .tag-list:after {
-  content: "...";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 0 5px;
-  background-color: #f8f8f8;
-  font-weight: bold;
+  content: "";
   display: none;
 }
 
 .tag-list.overflowing:after {
-  display: block;
+  display: none;
 }
 
 .tag-item {
@@ -645,7 +639,7 @@ b {
   background-color: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
-  margin: 0 0 15px 0;
+  margin: 0 0 5px 0;
 }
 
 .search-wrapper {
@@ -701,7 +695,8 @@ b {
   box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
 }
 
-.search-button {
+.tag-search-button,
+.title-search-button {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -726,13 +721,17 @@ b {
   transition: background-color 0.2s;
 }
 
-.search-button:hover {
+.title-search-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.search-button .ms-Icon--Search {
+.title-search-button .ms-Icon--Search {
   font-size: 16px;
   color: #666;
+}
+
+.tag-search-button:hover {
+  cursor: default;
 }
 
 .filter-options {
@@ -823,10 +822,17 @@ b {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #dddddd;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
   box-sizing: border-box;
-  height: 45px;
+  min-height: 45px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.form-input::placeholder {
+  color: #999999;
 }
 
 .form-input:focus {
@@ -854,6 +860,7 @@ b {
 .add-slide-thumbnail,
 .edit-slide-thumbnail {
   width: 100%;
+  min-height: 160px;  
   object-fit: contain;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
@@ -884,9 +891,9 @@ b {
 .tagify--custom-dropdown {
   background-color: #ffffff;
   width: 100%;
-  padding: 4px 40px 4px 0px;
+  padding: 4px 32px 4px 0px;
   border: 1px solid #dddddd;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
   box-sizing: border-box;
 }
@@ -936,4 +943,14 @@ b {
 
 .hidden {
   display: none !important;
+}
+
+/* 슬라이드 갯수 표시 영역 스타일 */
+.slides-count {
+  display: flex;
+  justify-content: flex-end;
+  color: #333;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 500;
 }

@@ -30,7 +30,8 @@
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@yaireo/tagify": "^4.33.2",
     "core-js": "^3.36.0",
-    "regenerator-runtime": "^0.14.1"
+    "regenerator-runtime": "^0.14.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

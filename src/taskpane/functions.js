@@ -11,10 +11,12 @@ import {
   editJsonFile,
   deleteOneSlideJsonFile,
 } from "./graphService";
-import Tagify from "@yaireo/tagify";
 import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache, updateSlideListCache } from "./state";
 
-async function getBase64Image() {
+import Tagify from "@yaireo/tagify";
+import { v4 as uuidv4 } from "uuid";
+
+async function exportSelectedSlideAsBase64() {
   return new Promise((resolve, reject) => {
     PowerPoint.run(async (context) => {
       const selectedSlideIndex = await getSelectedSlideIndex();
@@ -22,53 +24,17 @@ async function getBase64Image() {
 
       const selectedSlide = context.presentation.slides.getItemAt(realSlideIndex);
 
-      const thumbnail = selectedSlide.getImageAsBase64({
+      const thumbnailbase64 = selectedSlide.getImageAsBase64({
         options: {
           height: 100,
         },
       });
 
-      await context.sync();
-
-      resolve(thumbnail.m_value);
-    }).catch((error) => {
-      reject(error);
-    });
-  });
-}
-
-/**
- * 주어진 태그 딕셔너리를 슬라이드에 추가하는 함수
- * @param {Object} userTags 태그 딕셔너리 (key-value 쌍)
- */
-async function exportSelectedSlideAsBase64(formData) {
-  return new Promise((resolve, reject) => {
-    PowerPoint.run(async (context) => {
-      // 현재 선택된 슬라이드 인덱스 가져오기
-      const selectedSlideIndex = await getSelectedSlideIndex();
-      const realSlideIndex = selectedSlideIndex - 1;
-
-      // 선택된 슬라이드 가져오기
-      const selectedSlide = context.presentation.slides.getItemAt(realSlideIndex);
-
-      // 슬라이드 내보내기
-      const slideExport = selectedSlide.exportAsBase64();
+      const slidebase64 = selectedSlide.exportAsBase64();
 
       await context.sync();
 
-      const { title, tags, timestamp, thumbnail } = formData;
-
-      // Base64 값 추출
-      const slideBase64Value = slideExport.m_value || slideExport;
-
-      resolve({
-        id: new Date().getTime().toString(), // 고유 ID 생성
-        slide: slideBase64Value,
-        thumbnail: thumbnail,
-        title: title,
-        tags: tags,
-        saved_at: timestamp,
-      });
+      resolve({ thumbnail: thumbnailbase64.m_value, slide: slidebase64.m_value });
     }).catch((error) => {
       reject(error);
     });
@@ -248,11 +214,14 @@ function registerPageEventHandlers(pageId) {
         });
 
         // 썸네일 이미지 추가
+        const { thumbnail, slide } = await exportSelectedSlideAsBase64();
+
         const thumbnailImg = document.querySelector("#add-slide-thumbnail");
-        const base64 = await getBase64Image();
-        thumbnailImg.src = `data:image/png;base64,${base64}`;
+        thumbnailImg.src = `data:image/png;base64,${thumbnail}`;
+        thumbnailImg.dataset.slide = slide;
         console.log("썸네일 이미지 설정 완료");
 
+        // 슬라이드 base64 추가
         console.log("기본 태그 입력 필드에 Tagify 적용됨");
       }
     });
@@ -279,7 +248,7 @@ function registerPageEventHandlers(pageId) {
       // 태그 입력 필드에 태그 추가
       const editTagsInput = document.querySelector("input[name=edit-tags]");
       if (editTagsInput) {
-        editTagsInput.value = slideCache.tags.join(",");
+        editTagsInput.value = slideCache.tags ? slideCache.tags.join(",") : "";
       }
 
       const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
@@ -349,6 +318,12 @@ async function handleSignIn() {
 function displaySlides(slides) {
   const container = document.getElementById("slides-container");
   container.innerHTML = "";
+
+  // 슬라이드 갯수 업데이트
+  const slidesCountText = document.getElementById("slides-count-text");
+  if (slidesCountText) {
+    slidesCountText.textContent = `총 ${slides.length}개 슬라이드`;
+  }
 
   slides.forEach((slide) => {
     const slideElement = document.createElement("div");
@@ -478,20 +453,19 @@ async function handleExportSlide() {
     const formattedTags = formatTagOutput(tagifyInput.value);
     const thumbnail = document.querySelector("#add-slide-thumbnail");
     const thumbnailBase64 = thumbnail.src.split(",")[1];
+    const slideBase64 = thumbnail.dataset.slide;
 
     // 폼 데이터 객체 생성
-    const formData = {
+    const formatData = {
+      id: uuidv4(),
       title: slideTitle,
       tags: formattedTags,
-      timestamp: new Date().toISOString(),
+      saved_at: new Date().toISOString(),
       thumbnail: thumbnailBase64,
+      slide: slideBase64,
     };
-    // 콘솔에 데이터 출력
-    console.log("슬라이드 추가 폼 데이터:", formData);
-
     // 슬라이드 추가 폼 데이터를 사용하여 슬라이드 추가
-    const result = await exportSelectedSlideAsBase64(formData);
-    await updateJsonFile(result);
+    await updateJsonFile(formatData);
     console.log("슬라이드 export 성공");
 
     // 메시지 표시

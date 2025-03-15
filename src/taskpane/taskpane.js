@@ -18,7 +18,6 @@ import {
   handleTagSearch,
 } from "./functions";
 import { tryCatch } from "./utils";
-import Tagify from "@yaireo/tagify";
 
 // Make showPage function globally accessible
 window.showPage = showPage;
@@ -35,7 +34,7 @@ Office.onReady((info) => {
     tryCatch(async () => {
       const isLoggedIn = await isUserLoggedIn();
       if (isLoggedIn) {
-        showPage("list-page");
+        showPage("add-page");
       } else {
         showPage("main-page");
       }

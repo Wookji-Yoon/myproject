@@ -57,7 +57,7 @@
           <div id="search-container">
             <div class="search-wrapper" id="title-search-wrapper">
               <input type="text" id="title-search-input" class="search-input" placeholder="제목으로 검색..." />
-              <button id="title-search-button" class="search-button ms-Button">
+              <button id="title-search-button" class="title-search-button ms-Button">
                 <i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i>
               </button>
             </div>
@@ -68,7 +68,7 @@
                 class="search-input tagify--custom-dropdown"
                 placeholder="태그로 검색..."
               />
-              <button id="tag-search-button" class="search-button ms-Button">
+              <button id="tag-search-button" class="tag-search-button ms-Button">
                 <i class="ms-Icon ms-Icon--Filter" aria-hidden="true"></i>
               </button>
             </div>
@@ -80,6 +80,12 @@
               </div>
             </div>
           </div>
+          
+          <!-- 슬라이드 갯수 표시 영역 추가 -->
+          <div id="slides-count" class="slides-count">
+            <span id="slides-count-text">총 0개 슬라이드</span>
+          </div>
+          
           <section id="slides-list" class="ms-welcome__main">
             <div class="padding">
               <div id="slides-container"></div>
@@ -114,7 +120,7 @@
 
             <div class="form-group">
               <label for="slide-tags">태그</label>
-              <input name="basic" placeholder="엔터로 구분하여 입력하세요" class="tagify--custom-dropdown" />
+              <input name="basic" placeholder="엔터로 구분하여 입력하세요" class="form-input tagify--custom-dropdown" />
             </div>
 
             <div class="form-button-container">
@@ -148,7 +154,7 @@
 
             <div class="form-group">
               <label for="edit-slide-tags">태그</label>
-              <input name="edit-tags" placeholder="엔터로 구분하여 입력하세요" class="tagify--custom-dropdown" />
+              <input name="edit-tags" placeholder="엔터로 구분하여 입력하세요" class="form-input tagify--custom-dropdown" />
             </div>
 
             <div class="form-button-container">
