@@ -10,6 +10,8 @@ import {
   updateJsonFile,
   editJsonFile,
   deleteOneSlideJsonFile,
+  getAccountInfo,
+  signOut,
 } from "./graphService";
 import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache, updateSlideListCache } from "./state";
 
@@ -125,6 +127,85 @@ function showPage(pageId) {
  */
 function registerPageEventHandlers(pageId) {
   console.log(`페이지 ${pageId}의 이벤트 핸들러 등록`);
+
+  // 모든 페이지에서 공통으로 사용하는 햄버거 메뉴 이벤트 등록
+  const hamburgerMenu = document.getElementById("hamburger-menu");
+  if (hamburgerMenu) {
+    // 이미 이벤트 리스너가 있는지 확인
+    if (!hamburgerMenu.dataset.hasListener) {
+      hamburgerMenu.addEventListener("click", function () {
+        showPage("settings-page");
+      });
+      hamburgerMenu.dataset.hasListener = "true";
+    }
+  }
+
+  // 설정 페이지 뒤로가기 버튼 이벤트 등록
+  const settingsBackButton = document.getElementById("settings-page-back");
+  if (settingsBackButton) {
+    // 이미 이벤트 리스너가 있는지 확인
+    if (!settingsBackButton.dataset.hasListener) {
+      settingsBackButton.addEventListener("click", function () {
+        // 이전 페이지로 돌아가기 (기본적으로 list-page로 설정)
+        showPage("list-page");
+      });
+      settingsBackButton.dataset.hasListener = "true";
+    }
+  }
+
+  // 계정 페이지 뒤로가기 버튼 이벤트 등록
+  const accountBackButton = document.getElementById("account-page-back");
+  if (accountBackButton) {
+    // 이미 이벤트 리스너가 있는지 확인
+    if (!accountBackButton.dataset.hasListener) {
+      accountBackButton.addEventListener("click", function () {
+        // 설정 페이지로 돌아가기
+        showPage("settings-page");
+      });
+      accountBackButton.dataset.hasListener = "true";
+    }
+  }
+
+  // 도움말 페이지 뒤로가기 버튼 이벤트 등록
+  const helpBackButton = document.getElementById("help-page-back");
+  if (helpBackButton) {
+    // 이미 이벤트 리스너가 있는지 확인
+    if (!helpBackButton.dataset.hasListener) {
+      helpBackButton.addEventListener("click", function () {
+        // 설정 페이지로 돌아가기
+        showPage("settings-page");
+      });
+      helpBackButton.dataset.hasListener = "true";
+    }
+  }
+
+  // 업데이트 페이지 뒤로가기 버튼 이벤트 등록
+  const updatesBackButton = document.getElementById("updates-page-back");
+  if (updatesBackButton) {
+    // 이미 이벤트 리스너가 있는지 확인
+    if (!updatesBackButton.dataset.hasListener) {
+      updatesBackButton.addEventListener("click", function () {
+        // 설정 페이지로 돌아가기
+        showPage("settings-page");
+      });
+      updatesBackButton.dataset.hasListener = "true";
+    }
+  }
+
+  // 설정 항목 클릭 이벤트 등록
+  if (pageId === "settings-page") {
+    const settingsItems = document.querySelectorAll(".settings-item");
+    settingsItems.forEach((item) => {
+      // 이미 이벤트 리스너가 있는지 확인
+      if (!item.dataset.hasListener) {
+        item.addEventListener("click", function () {
+          const settingType = this.dataset.setting;
+          handleSettingClick(settingType);
+        });
+        item.dataset.hasListener = "true";
+      }
+    });
+  }
 
   if (pageId === "list-page") {
     // list-page 페이지에 대한 이벤트 핸들러
@@ -280,6 +361,76 @@ function registerPageEventHandlers(pageId) {
         console.log("수정 페이지 태그 입력 필드에 Tagify 적용됨");
       }
     });
+  } else if (pageId === "account-page") {
+    displayAccountInfo();
+  }
+}
+
+/**
+ * 설정 항목 클릭 처리 함수
+ * @param {string} settingType 클릭한 설정 타입
+ */
+function handleSettingClick(settingType) {
+  console.log(`설정 항목 클릭: ${settingType}`);
+
+  switch (settingType) {
+    case "account":
+      showPage("account-page");
+      displayAccountInfo();
+      break;
+    case "help":
+      showPage("help-page");
+      break;
+    case "updates":
+      showPage("updates-page");
+      displayUpdateInfo();
+      break;
+    case "logout":
+      handleLogout();
+      break;
+    default:
+      break;
+  }
+}
+
+/**
+ * 계정 정보를 표시하는 함수
+ */
+async function displayAccountInfo() {
+  try {
+    // 로딩 상태 표시
+    document.getElementById("user-name").textContent = "로딩 중...";
+    document.getElementById("user-email").textContent = "로딩 중...";
+
+    // 계정 정보 가져오기
+    const accountInfo = await getAccountInfo();
+    console.log("계정 정보:", accountInfo);
+
+    // 기본 정보 표시 (이름 및 이메일)
+    document.getElementById("user-name").textContent =
+      accountInfo.detailedInfo.displayName || accountInfo.basicInfo.name;
+    document.getElementById("user-email").textContent = accountInfo.detailedInfo.mail || accountInfo.basicInfo.username;
+  } catch (error) {
+    console.error("계정 정보 표시 오류:", error);
+    document.getElementById("user-name").textContent = "정보를 불러올 수 없습니다";
+    document.getElementById("user-email").textContent = "정보를 불러올 수 없습니다";
+  }
+}
+
+/**
+ * 로그아웃 처리 함수
+ */
+async function handleLogout() {
+  try {
+    // 로그아웃 시도
+    await signOut();
+
+    showPage("main-page");
+    clearSlideListCache();
+    // 앱 상태 초기화 (필요 시)
+  } catch (error) {
+    console.error("로그아웃 오류:", error);
+    setMessage("로그아웃 중 오류가 발생했습니다: " + error.message);
   }
 }
 
@@ -682,6 +833,121 @@ async function handleTagSearch(searchTerm) {
   }
 }
 
+/**
+ * 업데이트 정보 가져오기
+ * @returns {Object} 업데이트 정보 객체
+ */
+function getUpdateInfo() {
+  // 하드코딩된 업데이트 정보 반환
+  // 실제 애플리케이션에서는 이 부분을 서버 API 호출로 대체해야 합니다
+  const updateData = {
+    current_version: "1.0",
+    is_latest: false,
+    download_url: "https://www.google.com",
+    update_history: [
+      {
+        version: "1.0",
+        release_date: "2023-07-01",
+        details: [
+          "초기 버전 출시",
+          "PowerPoint 슬라이드 저장 및 검색 기능",
+          "태그 기반 슬라이드 관리",
+          "Microsoft 계정 연동",
+        ],
+      },
+      {
+        version: "0.9 Beta",
+        release_date: "2023-06-15",
+        details: ["베타 버전 릴리스", "기본 UI 구현", "OneDrive 연동 테스트", "슬라이드 썸네일 생성 기능"],
+      },
+      {
+        version: "0.8 Alpha",
+        release_date: "2023-05-20",
+        details: ["알파 버전 테스트", "기본 기능 구현", "Office API 연동 시작"],
+      },
+    ],
+  };
+
+  return updateData;
+}
+
+/**
+ * 업데이트 정보 표시 함수
+ */
+function displayUpdateInfo() {
+  try {
+    // 로딩 상태 표시
+    document.querySelector(".version-number").textContent = "로딩 중...";
+    document.querySelector(".version-status").textContent = "";
+
+    // 다운로드 링크 초기화
+    const downloadLink = document.getElementById("download-link");
+    if (downloadLink) {
+      downloadLink.style.display = "none";
+    }
+
+    // 업데이트 히스토리 초기화
+    const updateHistory = document.querySelector(".update-history");
+    updateHistory.innerHTML = "";
+
+    // 업데이트 정보 가져오기
+    const updateInfo = getUpdateInfo();
+    console.log("업데이트 정보:", updateInfo);
+
+    // 현재 버전 표시
+    document.querySelector(".version-number").textContent = `ver. ${updateInfo.current_version}`;
+
+    // 최신 버전 상태 표시
+    const versionStatus = document.querySelector(".version-status");
+    if (updateInfo.is_latest) {
+      versionStatus.textContent = "최신버전입니다";
+      versionStatus.classList.remove("outdated");
+
+      // 다운로드 링크 숨기기
+      if (downloadLink) {
+        downloadLink.style.display = "none";
+      }
+    } else {
+      versionStatus.textContent = "최신버전이 아닙니다";
+      versionStatus.classList.add("outdated");
+
+      // 다운로드 링크 표시
+      if (downloadLink && updateInfo.download_url) {
+        downloadLink.href = updateInfo.download_url;
+        downloadLink.style.display = "block";
+      }
+    }
+
+    // 업데이트 히스토리 표시
+    updateInfo.update_history.forEach(function (update) {
+      const updateItem = document.createElement("div");
+      updateItem.className = "update-item";
+
+      const versionElement = document.createElement("div");
+      versionElement.className = "update-version";
+      versionElement.textContent = `ver. ${update.version}`;
+
+      const detailsList = document.createElement("ul");
+      detailsList.className = "update-details";
+
+      update.details.forEach(function (detail) {
+        const detailItem = document.createElement("li");
+        detailItem.textContent = detail;
+        detailsList.appendChild(detailItem);
+      });
+
+      updateItem.appendChild(versionElement);
+      updateItem.appendChild(detailsList);
+      updateHistory.appendChild(updateItem);
+    });
+  } catch (error) {
+    console.error("업데이트 정보 표시 오류:", error);
+    document.querySelector(".version-number").textContent = "ver. 1.0";
+    document.querySelector(".version-status").textContent = "업데이트 정보를 불러올 수 없습니다";
+    document.querySelector(".version-status").style.color = "#ff9800";
+  }
+}
+
 export {
   exportSelectedSlideAsBase64,
   insertAfterSelectedSlide,
@@ -696,4 +962,8 @@ export {
   handleEditIconClick,
   handleTitleSearch,
   handleTagSearch,
+  handleSettingClick,
+  displayAccountInfo,
+  handleLogout,
+  displayUpdateInfo,
 };

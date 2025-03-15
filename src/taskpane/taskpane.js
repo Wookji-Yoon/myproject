@@ -7,20 +7,36 @@
 
 import { isUserLoggedIn, readJsonFile } from "./graphService";
 import {
+  showPage,
+  registerPageEventHandlers,
   handleSignIn,
   handleExportSlide,
-  showPage,
-  handleInsertSlide,
   handleEditSlide,
   handleDeleteIconClick,
   handleEditIconClick,
   handleTitleSearch,
   handleTagSearch,
+  handleSettingClick,
+  displayAccountInfo,
+  handleLogout,
+  handleInsertSlide,
 } from "./functions";
 import { tryCatch } from "./utils";
 
-// Make showPage function globally accessible
+// window 객체에 함수들을 바인딩합니다.
 window.showPage = showPage;
+window.registerPageEventHandlers = registerPageEventHandlers;
+window.handleSignIn = handleSignIn;
+window.handleExportSlide = handleExportSlide;
+window.handleEditSlide = handleEditSlide;
+window.handleDeleteIconClick = handleDeleteIconClick;
+window.handleEditIconClick = handleEditIconClick;
+window.handleTitleSearch = handleTitleSearch;
+window.handleTagSearch = handleTagSearch;
+window.handleSettingClick = handleSettingClick;
+window.displayAccountInfo = displayAccountInfo;
+window.handleLogout = handleLogout;
+window.handleInsertSlide = handleInsertSlide;
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint && info.platform === Office.PlatformType.PC) {
@@ -34,7 +50,7 @@ Office.onReady((info) => {
     tryCatch(async () => {
       const isLoggedIn = await isUserLoggedIn();
       if (isLoggedIn) {
-        showPage("add-page");
+        showPage("settings-page");
       } else {
         showPage("main-page");
       }

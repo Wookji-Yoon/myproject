@@ -336,6 +336,48 @@ async function isUserLoggedIn() {
   }
 }
 
+async function getAccountInfo() {
+  try {
+    await initializeMsal();
+    const account = msalInstance.getActiveAccount();
+
+    if (!account) {
+      throw new Error("사용자가 로그인되어 있지 않습니다.");
+    }
+
+    // Graph API를 통해 더 자세한 사용자 정보 가져오기
+    const client = await getGraphClient();
+    const userDetails = await client.api("/me").get();
+
+    return {
+      basicInfo: account, // MSAL에서 제공하는 기본 계정 정보
+      detailedInfo: userDetails, // Graph API에서 제공하는 상세 정보
+    };
+  } catch (error) {
+    console.error("계정 정보 가져오기 실패:", error);
+    throw error;
+  }
+}
+
+async function signOut() {
+  try {
+    await initializeMsal();
+
+    // 모든 계정에서 로그아웃 (single account 모드에서도 안전)
+    const logoutRequest = {
+      account: msalInstance.getActiveAccount(),
+      postLogoutRedirectUri: msalConfig.auth.redirectUri,
+    };
+
+    await msalInstance.logoutPopup(logoutRequest);
+    console.log("로그아웃 성공");
+    return true;
+  } catch (error) {
+    console.error("로그아웃 실패:", error);
+    throw error;
+  }
+}
+
 export {
   initializeMsal,
   signIn,
@@ -347,4 +389,6 @@ export {
   deleteOneSlideJsonFile,
   editJsonFile,
   isUserLoggedIn,
+  getAccountInfo,
+  signOut,
 };
