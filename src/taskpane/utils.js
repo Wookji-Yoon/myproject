@@ -113,6 +113,103 @@ function formatTagOutput(output) {
   return parsed.map((item) => item.value);
 }
 
+/**
+ * 태그 목록에서 특정 키워드를 감지하여 해당하는 이미지를 모달로 표시하는 함수
+ * @param {Array} tags - 감지할 태그 배열
+ * @param {Object} keywordImageMap - 키워드와 이미지 파일명의 매핑 객체 (예: {'채운': 'logo-filled.png'})
+ * @param {Set} detectedKeywords - 이미 감지된 키워드를 추적하는 Set 객체
+ * @returns {Set} - 현재까지 감지된 키워드가 업데이트된 Set 객체
+ */
+function detectKeywordsAndShowImages(tags, keywordImageMap, detectedKeywords = new Set()) {
+  if (!Array.isArray(tags) || tags.length === 0) {
+    return detectedKeywords;
+  }
+
+  // 키워드 검사
+  Object.keys(keywordImageMap).forEach((keyword) => {
+    // 해당 키워드가 태그에 있고, 아직 감지되지 않았다면
+    if (tags.includes(keyword) && !detectedKeywords.has(keyword)) {
+      // 이미지 모달 표시
+      showImageModal(keywordImageMap[keyword]);
+      console.log(`${keyword}가 있습니다`);
+      // 감지된 키워드 추가
+      detectedKeywords.add(keyword);
+    }
+  });
+
+  return detectedKeywords;
+}
+
+/**
+ * 이미지를 모달 형태로 화면 중앙에 표시하는 함수
+ * @param {string} imageFileName - 표시할 이미지 파일 이름
+ */
+function showImageModal(imageFileName) {
+  // 이미 모달이 존재하는 경우 제거
+  const existingModal = document.getElementById("image-modal-container");
+  if (existingModal) {
+    document.body.removeChild(existingModal);
+    return;
+  }
+
+  // 모달 컨테이너 생성
+  const modalContainer = document.createElement("div");
+  modalContainer.id = "image-modal-container";
+  modalContainer.style.position = "fixed";
+  modalContainer.style.top = "0";
+  modalContainer.style.left = "0";
+  modalContainer.style.width = "100%";
+  modalContainer.style.height = "100%";
+  modalContainer.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  modalContainer.style.display = "flex";
+  modalContainer.style.justifyContent = "center";
+  modalContainer.style.alignItems = "center";
+  modalContainer.style.zIndex = "9999";
+
+  // 이미지 요소 생성
+  const imageElement = document.createElement("img");
+  imageElement.src = `../../assets/${imageFileName}`;
+  imageElement.style.maxWidth = "80%";
+  imageElement.style.maxHeight = "80%";
+  imageElement.style.boxShadow = "0 0 20px rgba(0, 0, 0, 0.5)";
+  imageElement.style.transition = "transform 0.2s ease-in-out";
+
+  // 이미지에 마우스 오버 효과 추가
+  imageElement.onmouseover = function () {
+    this.style.transform = "scale(1.02)";
+  };
+  imageElement.onmouseout = function () {
+    this.style.transform = "scale(1)";
+  };
+
+  // 이미지 클릭 시 이벤트 버블링 방지
+  imageElement.onclick = function (event) {
+    event.stopPropagation();
+  };
+
+  // 모달 컨테이너에 이미지 추가
+  modalContainer.appendChild(imageElement);
+
+  // 모달 클릭 시 닫기
+  modalContainer.addEventListener("click", function () {
+    document.body.removeChild(modalContainer);
+  });
+
+  // 모달을 body에 추가
+  document.body.appendChild(modalContainer);
+
+  // ESC 키를 눌러 모달 닫기 기능 추가
+  function handleEscKey(event) {
+    if (event.key === "Escape") {
+      if (document.body.contains(modalContainer)) {
+        document.body.removeChild(modalContainer);
+      }
+      document.removeEventListener("keydown", handleEscKey);
+    }
+  }
+  document.addEventListener("keydown", handleEscKey);
+}
+
 export {
   getSelectedSlideIndex,
   getSelectedSlideId,
@@ -122,4 +219,6 @@ export {
   createJsonData,
   subtractArrays,
   formatTagOutput,
+  detectKeywordsAndShowImages,
+  showImageModal,
 };

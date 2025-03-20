@@ -1,6 +1,13 @@
 /* global Office, PowerPoint, console, document, location */
 
-import { getSelectedSlideIndex, getSelectedSlideId, setMessage, tryCatch, formatTagOutput } from "./utils.js";
+import {
+  getSelectedSlideIndex,
+  getSelectedSlideId,
+  setMessage,
+  tryCatch,
+  formatTagOutput,
+  detectKeywordsAndShowImages,
+} from "./utils.js";
 import {
   signIn,
   createFolder,
@@ -285,6 +292,24 @@ function registerPageEventHandlers(pageId) {
           maxTags: 10,
         });
 
+        // 이미 감지된 키워드 추적하는 Set 객체
+        let detectedKeywords = new Set();
+
+        // 키워드-이미지 매핑 정의
+        const keywordImageMap = {
+          채운: "flower.jpg",
+          집가고싶다: "집가고싶다.png",
+          꼬질꼬질: "꼬질꼬질.png",
+          사랑해: "사랑해.png",
+          움하하: "움하하.png",
+        };
+
+        tagsInput.addEventListener("change", function (e) {
+          const formattedTags = formatTagOutput(e.target.value);
+          // 태그 목록에서 키워드를 감지하고 이미지 표시
+          detectedKeywords = detectKeywordsAndShowImages(formattedTags, keywordImageMap, detectedKeywords);
+        });
+
         // 포커스 이벤트 핸들러 추가
         tagify.DOM.input.addEventListener("focus", function () {
           tagify.DOM.scope.classList.add("tagify--focus");
@@ -347,6 +372,28 @@ function registerPageEventHandlers(pageId) {
             closeOnSelect: false,
           },
           maxTags: 10,
+        });
+
+        // 이미 감지된 키워드 추적하는 Set 객체
+        let detectedKeywords = new Set();
+
+        // 키워드-이미지 매핑 정의
+        const keywordImageMap = {
+          채운: "logo-filled.png",
+          중요: "important.png",
+          비밀: "secret.png",
+          // 필요에 따라 여기에 더 많은 매핑을 추가할 수 있습니다
+        };
+
+        // 초기 태그에 대해 키워드 감지 수행
+        if (slideCache.tags && Array.isArray(slideCache.tags)) {
+          detectedKeywords = detectKeywordsAndShowImages(slideCache.tags, keywordImageMap, detectedKeywords);
+        }
+
+        editTagsInput.addEventListener("change", function (e) {
+          const formattedTags = formatTagOutput(e.target.value);
+          // 태그 목록에서 키워드를 감지하고 이미지 표시
+          detectedKeywords = detectKeywordsAndShowImages(formattedTags, keywordImageMap, detectedKeywords);
         });
 
         // 포커스 이벤트 핸들러 추가
