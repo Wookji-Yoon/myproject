@@ -6,8 +6,8 @@
   <DefaultLocale>ko-KR</DefaultLocale>
   <DisplayName DefaultValue="장표관리자 Slider"/>
   <Description DefaultValue="장표를 관리하는 가장 효율적인 도구"/>
-  <IconUrl DefaultValue="https://www.contoso.com/assets/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://www.contoso.com/assets/icon-80.png"/>
+  <IconUrl DefaultValue="https://wookji-yoon.github.io/myproject/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://wookji-yoon.github.io/myproject/assets/icon-80.png"/>
   <SupportUrl DefaultValue="https://slider10.notion.site/"/>
   <AppDomains>
     <AppDomain>https://slider10.notion.site</AppDomain>
@@ -16,7 +16,7 @@
     <Host Name="Presentation"/>
   </Hosts>
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://www.contoso.com/taskpane.html"/>
+    <SourceLocation DefaultValue="https://wookji-yoon.github.io/myproject/taskpane.html"/>
   </DefaultSettings>
   <Permissions>ReadWriteDocument</Permissions>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
@@ -62,14 +62,14 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://www.contoso.com/assets/logo(bold).png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://www.contoso.com/assets/logo(bold).png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://www.contoso.com/assets/logo(bold).png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://wookji-yoon.github.io/myproject/assets/logo(bold).png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://wookji-yoon.github.io/myproject/assets/logo(bold).png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://wookji-yoon.github.io/myproject/assets/logo(bold).png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://slider10.notion.site/"/>
-        <bt:Url id="Commands.Url" DefaultValue="https://www.contoso.com/commands.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://www.contoso.com/taskpane.html"/>
+        <bt:Url id="Commands.Url" DefaultValue="https://wookji-yoon.github.io/myproject/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://wookji-yoon.github.io/myproject/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="장표관리자 Slider"/>
