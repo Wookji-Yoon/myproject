@@ -93,18 +93,12 @@ async function handleSignIn() {
   const account = await signIn();
   setMessage(`${account.name}님으로 성공적으로 로그인했습니다!`);
 
-  // myapp 폴더 생성 (없는 경우)
-  await createFolder();
-
-  // JSON 파일 경로 설정
-  const jsonFilePath = "/me/drive/root:/myapp/";
-
   // 파일 존재 여부 확인
-  const exists = await fileExists(jsonFilePath + "slides.json");
+  const exists = await fileExists();
 
   // 파일이 없으면 생성
   if (!exists) {
-    await createJsonFile(jsonFilePath);
+    await createJsonFile();
     setMessage(`${account.name}님으로 로그인 완료 및 프레젠테이션 JSON 파일을 생성했습니다.`);
     showPage("list-page");
   } else {
@@ -377,6 +371,7 @@ async function handleDeleteIconClick(event) {
 
   // 슬라이드 캐시 삭제
   await updateSlideListCache(slideId);
+  displaySlides(await getSlideListCache().slides);
 
   try {
     // 백엔드에서 슬라이드 삭제 시도

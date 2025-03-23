@@ -107,6 +107,8 @@ function registerListPageHandlers() {
 
   let jsonData;
   tryCatch(async () => {
+    const slidesCountText = document.getElementById("slides-count-text");
+    slidesCountText.textContent = "로딩 중...";
     try {
       jsonData = await getSlideListCache();
 
@@ -185,10 +187,10 @@ function registerAddPageHandlers() {
 
       const keywordImageMap = {
         채운: "flower.jpg",
-        집가고싶다: "집가고싶다.png",
-        꼬질꼬질: "꼬질꼬질.png",
-        사랑해: "사랑해.png",
-        움하하: "움하하.png",
+        집가고싶다: "house.png",
+        꼬질꼬질: "ggojil.png",
+        사랑해: "love.png",
+        움하하: "haha.png",
       };
 
       tagsInput.addEventListener("change", function (e) {

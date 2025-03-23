@@ -1,3 +1,6 @@
-node_modules
+/node_modules
 deprecated.js
 Readme.md
+/docs
+/.cursor
+/.vscode

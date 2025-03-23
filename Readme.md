@@ -34,5 +34,9 @@
 26. app-header를 nav바랑 updates 페이지랑 [V]
 
 24. 로고 [V]
-26. Microsoft 권한
+26. Microsoft 권한 [V]
+
+27. 슬라이드 갯수
+28. 이스터에그 이미지 
+
 27. 배포

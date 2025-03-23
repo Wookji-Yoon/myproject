@@ -1,15 +1,22 @@
-/* global console, Blob, fetch */
+/* global console, Blob, fetch, window */
 
 import * as msal from "@azure/msal-browser";
 import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
 
 import { sampleDict } from "./sample";
 
+// 개발 환경과 프로덕션 환경의 URL 설정
+const DEV_URI = "https://localhost:3000";
+const PROD_URI = "https://wookji-yoon.github.io/myproject";
+
+// 현재 환경에 따른 redirectUri 설정
+const redirectUri = window.location.hostname === "localhost" ? DEV_URI : PROD_URI;
+
 const msalConfig = {
   auth: {
     clientId: "b8f7e758-dbc0-404c-886b-72f7fb9a3414", // 기존 클라이언트 ID 그대로 사용
     authority: "https://login.microsoftonline.com/common",
-    redirectUri: "https://localhost:3000",
+    redirectUri: redirectUri,
     loginPersistence: true, // 로그인 상태 유지
   },
   system: {
@@ -84,35 +91,6 @@ async function getGraphClient() {
   });
 }
 
-async function createFolder(folderName = "myapp") {
-  await initializeMsal();
-  const client = await getGraphClient();
-
-  try {
-    // 폴더 존재 여부 확인
-    try {
-      await client.api(`/me/drive/root:/${folderName}`).get();
-      console.log(`Folder '${folderName}' already exists`);
-      return true; // 폴더가 이미 존재함
-    } catch (error) {
-      // 폴더가 없으면 생성
-      if (error.statusCode === 404) {
-        await client.api("/me/drive/root/children").post({
-          name: folderName,
-          folder: {},
-        });
-        console.log(`Folder '${folderName}' created successfully`);
-        return true;
-      } else {
-        throw error;
-      }
-    }
-  } catch (error) {
-    console.error("Error creating folder:", error);
-    return false;
-  }
-}
-
 /* 현재 사용되지 않는 함수
 async function createPowerPointFile() {
   await initializeMsal();
@@ -131,7 +109,7 @@ async function createPowerPointFile() {
 }
 */
 
-async function fileExists(filePath) {
+async function fileExists(filePath = "/me/drive/root:/slider/slides.json") {
   await initializeMsal();
   const client = await getGraphClient();
 
@@ -147,9 +125,19 @@ async function fileExists(filePath) {
   }
 }
 
-async function createJsonFile(filePath = "/me/drive/root:/myapp/") {
+async function createJsonFile(filePath = "/me/drive/root:/slider/") {
   await initializeMsal();
   const client = await getGraphClient();
+
+  try {
+    await client.api("/me/drive/root/children").post({
+      name: "slider",
+      folder: {},
+    });
+    console.log(`Folder 'slider' created successfully`);
+  } catch (error) {
+    console.error("Error creating folder:", error);
+  }
 
   try {
     // 기본 JSON 구조를 exportSelectedSlideAsBase64의 출력 형식과 일치시킴
@@ -174,7 +162,7 @@ async function createJsonFile(filePath = "/me/drive/root:/myapp/") {
   }
 }
 
-async function readJsonFile(path = "/me/drive/root:/myapp/slides.json") {
+async function readJsonFile(path = "/me/drive/root:/slider/slides.json") {
   try {
     console.log("readJsonFile 함수 시작");
     const client = await getGraphClient();
@@ -219,7 +207,7 @@ async function updateJsonFile(jsonData) {
     existingData.slides.unshift(jsonData);
 
     // Microsoft Graph API를 사용하여 파일 업데이트
-    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(existingData, null, 2));
+    await client.api("/me/drive/root:/slider/slides.json:/content").put(JSON.stringify(existingData, null, 2));
 
     console.log("JSON file updated successfully");
   } catch (error) {
@@ -238,7 +226,7 @@ async function deleteOneSlideJsonFile(slideId) {
     const updatedJsonData = {
       slides: updatedData,
     };
-    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(updatedJsonData, null, 2));
+    await client.api("/me/drive/root:/slider/slides.json:/content").put(JSON.stringify(updatedJsonData, null, 2));
   } catch (error) {
     console.error("Error deleting slide:", error);
     throw error;
@@ -252,7 +240,7 @@ async function editJsonFile(updatedSlide) {
     const existingData = await readJsonFile();
     existingData.slides.find((slide) => slide.id === updatedSlide.id).title = updatedSlide.title;
     existingData.slides.find((slide) => slide.id === updatedSlide.id).tags = updatedSlide.tags;
-    await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(existingData, null, 2));
+    await client.api("/me/drive/root:/slider/slides.json:/content").put(JSON.stringify(existingData, null, 2));
   } catch (error) {
     console.error("Error editing JSON file:", error);
     throw error;

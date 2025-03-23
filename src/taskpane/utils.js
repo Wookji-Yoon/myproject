@@ -169,7 +169,7 @@ function showImageModal(imageFileName) {
 
   // 이미지 요소 생성
   const imageElement = document.createElement("img");
-  imageElement.src = `../../assets/${imageFileName}`;
+  imageElement.src = `https://wookji-yoon.github.io/myproject/assets/${imageFileName}`;
   imageElement.style.maxWidth = "80%";
   imageElement.style.maxHeight = "80%";
   imageElement.style.boxShadow = "0 0 20px rgba(0, 0, 0, 0.5)";
