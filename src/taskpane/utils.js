@@ -1,4 +1,4 @@
-/* global Office, OfficeExtension, console, document, fetch, process */
+/* global Office, OfficeExtension, console, document, fetch */
 
 function getSelectedSlideIndex() {
   return new OfficeExtension.Promise(function (resolve, reject) {
