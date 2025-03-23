@@ -1,0 +1,135 @@
+<!doctype html><html><head><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=Edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>PowerPoint Add-in</title><script src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script><link rel="stylesheet" href="https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"/><link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet"/><link href="a1f469e94d98c1778e76.css" rel="stylesheet"/><script defer="defer" src="polyfill.js"></script><script defer="defer" src="taskpane.js"></script></head><body class="ms-font-m ms-Fabric"><div id="sideload-msg">로딩 중...</div><div id="app-body" style="display: none"><div class="app-header"><div class="app-logo"><img src="assets/logo(eng).png" alt="로고"/></div><div class="menu-button" id="hamburger-menu"><i class="ms-Icon ms-Icon--GlobalNavButton" aria-hidden="true"></i></div></div><div id="main-page" class="page"><div class="page-content main-content"><div class="logo-container"><img width="120" height="120" src="assets/logo(korean).png" alt="MyProject" title="MyProject"/><h2 class="main-title">Powerpoint 장표를<br/>가장 효율적으로 관리해 보세요!</h2></div><div class="login-container"><button class="ms-Button ms-Button--hero" id="sign-in"><svg class="ms-logo" width="16" height="16" viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#ffffff"/><rect x="1" y="12" width="10" height="10" fill="#ffffff"/><rect x="12" y="1" width="10" height="10" fill="#ffffff"/><rect x="12" y="12" width="10" height="10" fill="#ffffff"/></svg> <span class="ms-Button-label">Microsoft로 시작하기</span></button><div class="help-text"><a href="#" class="help-link" id="help-link">도움이 필요하신가요?</a></div></div></div></div><div id="list-page" class="page"><div class="page-content"><div id="search-container"><div class="search-wrapper" id="title-search-wrapper"><input id="title-search-input" class="search-input" placeholder="제목으로 검색..."/> <button id="title-search-button" class="title-search-button ms-Button"><i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i></button></div><div class="search-wrapper hidden" id="tag-search-wrapper"><input id="tag-search-input" class="search-input tagify--custom-dropdown" placeholder="태그로 검색..."/> <button id="tag-search-button" class="tag-search-button ms-Button"><i class="ms-Icon ms-Icon--Filter" aria-hidden="true"></i></button></div><div class="filter-options"><span class="filter-label">구분:</span><div class="filter-tabs"><button class="filter-tab active" data-filter="title">제목</button> <button class="filter-tab" data-filter="tag">태그</button></div></div></div><div id="slides-count" class="slides-count"><span id="slides-count-text">총 0개 슬라이드</span></div><section id="slides-list" class="ms-welcome__main"><div class="padding"><div id="slides-container"></div></div><div class="add-circle-button" id="add-new-slide-button" title="목록에 슬라이드 추가"><i class="ms-Icon ms-Icon--Add" aria-hidden="true"></i></div></section></div></div><div id="add-page" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="add-page-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">슬라이드 추가하기</h2></div><div class="add-thumbnail-container"><img id="add-slide-thumbnail" class="add-slide-thumbnail" alt="슬라이드 썸네일"/></div><div class="form-container"><div class="form-group"><label for="slide-title"><span class="required">*</span> 제목</label> <input id="slide-title" class="form-input" placeholder="제목을 입력하세요" required/></div><div class="form-group"><label for="slide-tags">태그</label> <input name="basic" placeholder="엔터로 구분하여 입력하세요" class="form-input tagify--custom-dropdown"/></div><div class="form-button-container"><button class="ms-Button ms-Button--primary action-button" id="add-slide-button">슬라이드 추가하기</button></div></div></div></div><div id="edit-page" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="edit-page-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">슬라이드 수정하기</h2></div><div class="edit-thumbnail-container"><img id="edit-slide-thumbnail" class="edit-slide-thumbnail" alt="슬라이드 썸네일"/></div><div class="form-container"><div class="form-group"><label for="edit-slide-title"><span class="required">*</span> 제목</label> <input id="edit-slide-title" class="form-input" placeholder="제목을 입력하세요" required/></div><div class="form-group"><label for="edit-slide-tags">태그</label> <input name="edit-tags" placeholder="엔터로 구분하여 입력하세요" class="form-input tagify--custom-dropdown"/></div><div class="form-button-container"><button class="ms-Button ms-Button--primary action-button" id="edit-slide-button">슬라이드 수정하기</button></div></div></div></div><div id="settings-page" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="settings-page-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">설정</h2></div><div class="settings-container"><ul class="settings-list"><li class="settings-item" data-setting="account"><div class="settings-item-content"><i class="ms-Icon ms-Icon--Contact" aria-hidden="true"></i> <span>내 계정</span></div><i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i></li><li class="settings-item" data-setting="help"><div class="settings-item-content"><i class="ms-Icon ms-Icon--Help" aria-hidden="true"></i> <span>도움말</span></div><i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i></li><li class="settings-item" data-setting="version"><div class="settings-item-content"><i class="ms-Icon ms-Icon--History" aria-hidden="true"></i> <span>버전 정보</span></div><i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i></li><li class="settings-item" data-setting="logout"><div class="settings-item-content"><i class="ms-Icon ms-Icon--SignOut" aria-hidden="true"></i> <span>로그아웃</span></div></li></ul></div></div></div><div id="account-page" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="account-page-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">내 계정</h2></div><div class="account-info-container"><div class="account-details"><div class="account-details-content"><div class="detail-item"><div class="detail-label">이름</div><div id="user-name" class="detail-value">로딩 중...</div></div><div class="detail-item"><div class="detail-label">이메일</div><div id="user-email" class="detail-value">로딩 중...</div></div></div></div></div></div></div><div id="help-page-main" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="help-page-main-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">도움말</h2></div><div class="help-content">슬라이드는 Microsoft OneDrive에 저장되며, 직접 저장한 사용자만 접근할 수 있습니다.<br/>다른 사용자나 개발자는 저장된 슬라이드를 볼 수 없습니다.<br/><br/>추후 AI를 활용한 자동 저장, 슬라이드 공유 등의 기능을 추가될 예정입니다.<br/><br/>문의 사항은 아래 이메일로 연락 바랍니다.<br/>sliderhelp10@gmail.com</div></div></div><div id="help-page-setting" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="help-page-setting-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">도움말</h2></div><div class="help-content">슬라이드는 Microsoft OneDrive에 저장되며, 직접 저장한 사용자만 접근할 수 있습니다.<br/>다른 사용자나 개발자는 저장된 슬라이드를 볼 수 없습니다.<br/><br/>추후 AI를 활용한 자동 저장, 슬라이드 공유 등의 기능을 추가될 예정입니다.<br/><br/>문의 사항은 아래 이메일로 연락 바랍니다.<br/>sliderhelp10@gmail.com</div></div></div><div id="version-page" class="page"><div class="page-content"><div class="title-container"><button class="back-button" id="version-page-back"><i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i></button><h2 class="center-title">버전 정보</h2></div><div class="version-detail-title">버전 히스토리</div><div id="version-detail-notification" class="version-detail-notification"></div><div class="version-detail-history"><div class="version-detail-item"><div class="version-detail-version">ver. 1.0</div><li>초기 버전 릴리스</li><li>슬라이드 저장 및 검색 기능</li><li>태그 기반 슬라이드 관리</li><li>Microsoft 계정 연동</li></div></div></div></div><div id="updates-page" class="page"><div class="page-content"><div class="logo-container"><img width="120" height="120" src="assets/logo(korean).png" alt="MyProject" title="MyProject"/><h2 class="main-title">새로운 버전이 있습니다!<br/>업데이트를 진행해 주세요.</h2></div><div class="update-container"><div class="update-message"><a href="#" id="update-link">업데이트 받기</a></div><div class="update-details"><h4>주요 변경사항</h4><ul id="update-details-list"><li>새로운 기능 추가</li><li>성능 개선</li><li>버그 수정</li></ul></div></div></div></div></div><script>// 슬라이드 정보 토글 기능
+      document.addEventListener("DOMContentLoaded", function () {
+        // 햄버거 메뉴에 이벤트 리스너 추가
+        const hamburgerMenu = document.getElementById("hamburger-menu");
+        if (hamburgerMenu) {
+          hamburgerMenu.addEventListener("click", function () {
+            window.showPage("settings-page");
+          });
+        }
+
+        // 설정 페이지 뒤로가기 버튼에 이벤트 리스너 추가
+        const settingsBackButton = document.getElementById("settings-page-back");
+        if (settingsBackButton) {
+          settingsBackButton.addEventListener("click", function () {
+            window.showPage("list-page");
+          });
+        }
+
+        // 도움말 링크에 이벤트 리스너 추가
+        const helpLink = document.getElementById("help-link");
+        if (helpLink) {
+          helpLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.showPage("help-page-main");
+          });
+        }
+
+        // 뒤로가기 버튼에 이벤트 리스너 추가
+        document.getElementById("add-page-back").addEventListener("click", function () {
+          // showPage 함수 호출
+          window.showPage("list-page");
+        });
+
+        document.getElementById("edit-page-back").addEventListener("click", function () {
+          // showPage 함수 호출
+          window.showPage("list-page");
+        });
+
+        // 모든 토글 아이콘에 이벤트 리스너 추가
+        const addToggleListeners = function () {
+          const toggleIcons = document.querySelectorAll(".toggle-icon");
+          toggleIcons.forEach((icon) => {
+            // 이미 이벤트 리스너가 있는지 확인 (data 속성으로 표시)
+            if (icon.dataset.hasListener) return;
+
+            icon.addEventListener("click", function () {
+              // 모든 슬라이드 정보 요소 토글
+              const allSlideInfos = document.querySelectorAll(".slide-info");
+              const allTagLists = document.querySelectorAll(".tag-list");
+              const isCollapsed = allSlideInfos[0]?.classList.contains("collapsed");
+
+              // 토글 아이콘 변경
+              const allToggleIcons = document.querySelectorAll(".toggle-icon");
+
+              if (isCollapsed) {
+                // 펼치기
+                allSlideInfos.forEach((info) => info.classList.remove("collapsed"));
+                allTagLists.forEach((tags) => {
+                  tags.classList.remove("collapsed");
+
+                  // 태그가 오버플로우 상태인지 확인하고 클래스 추가
+                  if (tags.scrollHeight > tags.clientHeight) {
+                    tags.classList.add("overflowing");
+                  } else {
+                    tags.classList.remove("overflowing");
+                  }
+                });
+                allToggleIcons.forEach((icon) => {
+                  icon.textContent = "▼";
+                  icon.title = "제목 숨기기";
+                });
+              } else {
+                // 접기
+                allSlideInfos.forEach((info) => info.classList.add("collapsed"));
+                allTagLists.forEach((tags) => tags.classList.add("collapsed"));
+                allToggleIcons.forEach((icon) => {
+                  icon.textContent = "▲";
+                  icon.title = "제목 보기";
+                });
+              }
+            });
+
+            // 이벤트 리스너 추가 표시
+            icon.dataset.hasListener = "true";
+          });
+        };
+
+        // 새로운 슬라이드 아이템이 추가될 때마다 토글 아이콘 복제
+        const addToggleToNewSlides = function () {
+          const slideItems = document.querySelectorAll(".slide-item");
+          slideItems.forEach((item) => {
+            // 이미 토글 아이콘이 있는지 확인
+            if (item.querySelector(".toggle-icon")) return;
+
+            // 썸네일 컨테이너 찾기 또는 생성
+            let thumbnailContainer = item.querySelector(".thumbnail-container");
+            const thumbnailImg = item.querySelector(".slide-thumbnail");
+
+            // 썸네일 컨테이너가 없고 이미지는 있는 경우
+            if (!thumbnailContainer && thumbnailImg) {
+              // 썸네일 컨테이너 생성
+              thumbnailContainer = document.createElement("div");
+              thumbnailContainer.className = "thumbnail-container";
+
+              // 이미지를 컨테이너로 이동
+              const imgParent = thumbnailImg.parentNode;
+              imgParent.insertBefore(thumbnailContainer, thumbnailImg);
+              thumbnailContainer.appendChild(thumbnailImg);
+            }
+
+            if (thumbnailContainer) {
+              // 토글 아이콘 추가
+              const toggleIcon = document.createElement("div");
+              toggleIcon.className = "toggle-icon";
+              toggleIcon.textContent = "▼";
+              toggleIcon.title = "제목 숨기기";
+              thumbnailContainer.appendChild(toggleIcon);
+            }
+          });
+
+          // 새로 추가된 토글 아이콘에 이벤트 리스너 추가
+          addToggleListeners();
+        };
+
+        // 초기 로드 시 실행
+        addToggleToNewSlides();
+        addToggleListeners();
+
+        // 새 슬라이드가 추가될 때를 위한 MutationObserver 설정
+        const slidesContainer = document.getElementById("slides-container");
+        if (slidesContainer) {
+          const observer = new MutationObserver(addToggleToNewSlides);
+          observer.observe(slidesContainer, { childList: true, subtree: true });
+        }
+      });</script></body></html>
