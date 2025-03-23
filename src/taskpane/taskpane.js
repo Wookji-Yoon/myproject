@@ -1,14 +1,12 @@
-/* global document, Office, window, setTimeout, console */
+/* global document, Office, window, setTimeout */
 
 /*
  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
 
-import { isUserLoggedIn, readJsonFile } from "./graphService";
+import { isUserLoggedIn } from "./graphService";
 import {
-  showPage,
-  registerPageEventHandlers,
   handleSignIn,
   handleExportSlide,
   handleEditSlide,
@@ -16,12 +14,12 @@ import {
   handleEditIconClick,
   handleTitleSearch,
   handleTagSearch,
-  handleSettingClick,
-  displayAccountInfo,
-  handleLogout,
   handleInsertSlide,
 } from "./functions";
-import { tryCatch } from "./utils";
+
+import { showPage, registerPageEventHandlers } from "./pages";
+
+import { checkForUpdates, tryCatch } from "./utils";
 
 // window 객체에 함수들을 바인딩합니다.
 window.showPage = showPage;
@@ -33,9 +31,6 @@ window.handleDeleteIconClick = handleDeleteIconClick;
 window.handleEditIconClick = handleEditIconClick;
 window.handleTitleSearch = handleTitleSearch;
 window.handleTagSearch = handleTagSearch;
-window.handleSettingClick = handleSettingClick;
-window.displayAccountInfo = displayAccountInfo;
-window.handleLogout = handleLogout;
 window.handleInsertSlide = handleInsertSlide;
 
 Office.onReady((info) => {
@@ -43,16 +38,18 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
 
-    // 네비게이션 초기화
-    initializeNavigation();
-
     // 로그인 상태에 따라 기본 페이지 표시
     tryCatch(async () => {
-      const isLoggedIn = await isUserLoggedIn();
-      if (isLoggedIn) {
-        showPage("settings-page");
+      const update = await checkForUpdates();
+      if (update.update) {
+        showPage("updates-page");
       } else {
-        showPage("main-page");
+        const isLoggedIn = await isUserLoggedIn();
+        if (isLoggedIn) {
+          showPage("list-page");
+        } else {
+          showPage("main-page");
+        }
       }
     });
 
@@ -160,15 +157,14 @@ Office.onReady((info) => {
       tryCatch(async () => {
         await handleEditSlide();
       });
+
+    // 도움말 링크에 이벤트 리스너 추가
+    const helpLink = document.getElementById("help-link");
+    if (helpLink) {
+      helpLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.showPage("help-page-main");
+      });
+    }
   }
 });
-
-function initializeNavigation() {
-  const navButtons = document.querySelectorAll(".nav-button");
-  navButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const pageId = this.getAttribute("data-page");
-      showPage(pageId);
-    });
-  });
-}

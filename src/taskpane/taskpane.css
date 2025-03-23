@@ -23,9 +23,9 @@ ul {
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  background-color: #f4f4f4; /* 배경색을 앱 배경색과 동일하게 변경 */
-  border-bottom: 1px solid #e8e8e8; /* 테두리 색상 연하게 변경 */
-  margin-bottom: 2px;
+  background-color: #e8f4ff; /* 더 연하고 자연스러운 하늘색으로 변경 */
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 20px; /* 아래쪽 마진을 20px로 변경 */
 }
 
 .app-logo {
@@ -619,6 +619,7 @@ b {
   text-align: center;
   position: relative;
   min-height: 500px;
+  margin-top: 50px;
 }
 
 .logo-container {
@@ -632,6 +633,11 @@ b {
   left: 50%;
   transform: translate(-50%, -60%);
   width: 100%;
+}
+
+.logo-container img {
+  width: 140px;
+  height: 140px;
 }
 
 .main-title {
@@ -1249,4 +1255,164 @@ b {
 .update-details li {
   margin-bottom: 6px;
   font-size: 14px;
+}
+
+.update-notification {
+  text-align: left;
+  padding-left: 15px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #0078d7;
+}
+
+/* 업데이트 페이지 스타일 */
+#updates-page .page-content {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+  position: relative;
+  min-height: 500px;
+  margin-top: 50px;
+}
+
+#updates-page .logo-container {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 100%;
+  margin-top: -30px;
+}
+
+#updates-page .logo-container img {
+  width: 140px;
+  height: 140px;
+}
+
+#updates-page .main-title {
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 20px;
+  max-width: 280px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+#updates-page .update-container {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 0 20px;
+  margin-top: 50px;
+}
+
+#updates-page .update-message {
+  margin-bottom: 50px;
+}
+
+#updates-page .update-message a {
+  display: inline-block;
+  min-width: 200px;
+  width: 60%;
+  padding: 10px 16px;
+  background-color: #666666;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#updates-page .update-message a:hover {
+  background-color: #555555;
+}
+
+#updates-page .update-details {
+  text-align: left;
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+#updates-page .update-details h4 {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+#updates-page .update-details ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#updates-page .update-details li {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  padding-left: 16px;
+  position: relative;
+  margin-left: 15px;
+}
+
+#updates-page .update-details li:before {
+  content: "•";
+  color: #666666;
+  position: absolute;
+  left: 0;
+}
+
+/* 기존 update-container 스타일 제거 */
+.update-container {
+  padding: 0;
+  margin: 0;
+}
+
+.update-message {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.update-message p {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.update-message a {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+.update-message a:hover {
+  text-decoration: underline;
+}
+
+.update-details {
+  padding: 0;
+}
+
+.update-details h4 {
+  margin-left: 15px;
 }

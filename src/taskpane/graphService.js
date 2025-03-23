@@ -3,7 +3,6 @@
 import * as msal from "@azure/msal-browser";
 import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
 
-import { subtractArrays } from "./utils";
 import { sampleDict } from "./sample";
 
 const msalConfig = {
@@ -169,22 +168,6 @@ async function createJsonFile(filePath = "/me/drive/root:/myapp/") {
       )
     );
 
-    // Tag 저장용 Json을 따로 만듦
-    await client.api(filePath + "tags.json:/content").put(
-      new Blob(
-        [
-          JSON.stringify(
-            {
-              tags: ["샘플", "sample"],
-            },
-            null,
-            2
-          ),
-        ],
-        { type: "application/json" }
-      )
-    );
-
     console.log("presentation.json created successfully");
   } catch (error) {
     console.error("Error creating JSON file:", error);
@@ -243,28 +226,6 @@ async function updateJsonFile(jsonData) {
     console.error("Error updating JSON file:", error);
     throw error;
   }
-
-  try {
-    const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
-    console.log("tagJsonData", tagJsonData);
-    console.log("jsonData", jsonData);
-
-    // 두 태그 배열을 합치기 (중복 허용용)
-    const combinedTags = [...tagJsonData.tags, ...jsonData.tags];
-    console.log("combinedTags", combinedTags);
-
-    //combinedTags를 가나다순으로 정렬
-    const sortTags = combinedTags.sort();
-
-    tagJsonData.tags = sortTags;
-
-    // 업데이트된 태그 저장
-    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));
-    console.log("Tags updated successfully");
-  } catch (error) {
-    console.error("Error updating tags:", error);
-    throw error;
-  }
 }
 
 async function deleteOneSlideJsonFile(slideId) {
@@ -282,23 +243,6 @@ async function deleteOneSlideJsonFile(slideId) {
     console.error("Error deleting slide:", error);
     throw error;
   }
-
-  try {
-    // 태그목록에서 제거
-    const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
-
-    const targetSlide = existingData.slides.find((slide) => slide.id === slideId);
-    const deletedTags = targetSlide.tags;
-    const updatedTags = subtractArrays(tagJsonData.tags, deletedTags);
-    const updatedTagsJsonData = {
-      tags: updatedTags,
-    };
-
-    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(updatedTagsJsonData, null, 2));
-  } catch (error) {
-    console.error("Error deleting tags:", error);
-    throw error;
-  }
 }
 
 async function editJsonFile(updatedSlide) {
@@ -311,16 +255,6 @@ async function editJsonFile(updatedSlide) {
     await client.api("/me/drive/root:/myapp/slides.json:/content").put(JSON.stringify(existingData, null, 2));
   } catch (error) {
     console.error("Error editing JSON file:", error);
-    throw error;
-  }
-
-  try {
-    const tagJsonData = await readJsonFile("/me/drive/root:/myapp/tags.json");
-    const combinedTags = [...tagJsonData.tags, ...updatedSlide.tags];
-    tagJsonData.tags = combinedTags;
-    await client.api("/me/drive/root:/myapp/tags.json:/content").put(JSON.stringify(tagJsonData, null, 2));
-  } catch (error) {
-    console.error("Error editing tags:", error);
     throw error;
   }
 }

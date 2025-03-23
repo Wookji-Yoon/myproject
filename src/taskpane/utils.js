@@ -1,4 +1,4 @@
-/* global Office, OfficeExtension, console, document */
+/* global Office, OfficeExtension, console, document, fetch, process */
 
 function getSelectedSlideIndex() {
   return new OfficeExtension.Promise(function (resolve, reject) {
@@ -57,16 +57,17 @@ async function clearMessage(callback) {
   if (callback) {
     callback();
   }
-} /**
+}
+
+/**
  * 에러 핸들링을 위한 유틸리티 함수
  * @param {Function} callback 실행할 콜백 함수
  */
 async function tryCatch(callback) {
   try {
-    document.getElementById("message").innerText = "";
     await callback();
   } catch (error) {
-    setMessage("Error: " + error.toString());
+    console.error("Error:", error);
   }
 }
 
@@ -210,6 +211,24 @@ function showImageModal(imageFileName) {
   document.addEventListener("keydown", handleEscKey);
 }
 
+async function checkForUpdates() {
+  // API에서 JSON 데이터 가져오기
+  const response = await fetch("https://raw.githubusercontent.com/Wookji-Yoon/SliderAPI/refs/heads/master/update.json");
+  const data = await response.json();
+
+  console.log(data);
+
+  //data의 형태는 {version: string, update_url: string, update_description: string[]}이다.
+  const current_version = "1.1";
+  const update_url = data.update_url;
+  const update_description = data.update_description;
+  if (current_version !== data.version) {
+    return { update: true, update_url: update_url, update_description: update_description };
+  } else {
+    return { update: false };
+  }
+}
+
 export {
   getSelectedSlideIndex,
   getSelectedSlideId,
@@ -221,4 +240,5 @@ export {
   formatTagOutput,
   detectKeywordsAndShowImages,
   showImageModal,
+  checkForUpdates,
 };

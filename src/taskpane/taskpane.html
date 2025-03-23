@@ -20,25 +20,17 @@
       <!-- 상단 헤더 추가 -->
       <div class="app-header">
         <div class="app-logo">
-          <img src="../../assets/icon-128.png" alt="로고" />
+          <img src="../../assets/logo(eng).png" alt="로고" />
         </div>
         <div class="menu-button" id="hamburger-menu">
           <i class="ms-Icon ms-Icon--GlobalNavButton" aria-hidden="true"></i>
         </div>
       </div>
 
-      <nav class="nav-menu">
-        <button class="nav-button" data-page="main-page">메인</button>
-        <button class="nav-button" data-page="list-page">슬라이드 목록</button>
-        <button class="nav-button" data-page="add-page">슬라이드 추가</button>
-        <button class="nav-button" data-page="edit-page">수정하기</button>
-      </nav>
-
-      <div id="message"></div>
       <div id="main-page" class="page">
         <div class="page-content main-content">
           <div class="logo-container">
-            <img width="120" height="120" src="../../assets/logo-filled.png" alt="MyProject" title="MyProject" />
+            <img width="120" height="120" src="../../assets/logo(korean).png" alt="MyProject" title="MyProject" />
             <h2 class="main-title">Powerpoint 장표를 <br />가장 효율적으로 관리해 보세요!</h2>
           </div>
 
@@ -90,12 +82,12 @@
               </div>
             </div>
           </div>
-          
+
           <!-- 슬라이드 갯수 표시 영역 추가 -->
           <div id="slides-count" class="slides-count">
             <span id="slides-count-text">총 0개 슬라이드</span>
           </div>
-          
+
           <section id="slides-list" class="ms-welcome__main">
             <div class="padding">
               <div id="slides-container"></div>
@@ -164,7 +156,11 @@
 
             <div class="form-group">
               <label for="edit-slide-tags">태그</label>
-              <input name="edit-tags" placeholder="엔터로 구분하여 입력하세요" class="form-input tagify--custom-dropdown" />
+              <input
+                name="edit-tags"
+                placeholder="엔터로 구분하여 입력하세요"
+                class="form-input tagify--custom-dropdown"
+              />
             </div>
 
             <div class="form-button-container">
@@ -175,7 +171,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 설정 페이지 추가 -->
       <div id="settings-page" class="page">
         <div class="page-content">
@@ -185,7 +181,7 @@
             </button>
             <h2 class="center-title">설정</h2>
           </div>
-          
+
           <div class="settings-container">
             <ul class="settings-list">
               <li class="settings-item" data-setting="account">
@@ -202,10 +198,10 @@
                 </div>
                 <i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
               </li>
-              <li class="settings-item" data-setting="updates">
+              <li class="settings-item" data-setting="version">
                 <div class="settings-item-content">
                   <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
-                  <span>업데이트 정보</span>
+                  <span>버전 정보</span>
                 </div>
                 <i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
               </li>
@@ -229,7 +225,7 @@
             </button>
             <h2 class="center-title">내 계정</h2>
           </div>
-          
+
           <div class="account-info-container">
             <div class="account-details">
               <div class="account-details-content">
@@ -247,49 +243,59 @@
         </div>
       </div>
 
-      <!-- 도움말 페이지 추가 -->
-      <div id="help-page" class="page">
+      <!-- 도움말 페이지 (메인) 추가 -->
+      <div id="help-page-main" class="page">
         <div class="page-content">
           <div class="title-container">
-            <button class="back-button" id="help-page-back">
+            <button class="back-button" id="help-page-main-back">
               <i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
             </button>
             <h2 class="center-title">도움말</h2>
           </div>
-          
+
           <div class="help-content">
-            슬라이드는 Microsoft OneDrive에 저장되며, 직접 저장한 사용자만 접근할 수 있습니다. 다른 사용자나 개발자는 볼 수 없습니다.
-            <br><br>
-            추후 AI를 활용한 자동 저장, 슬라이드 공유 등의 기능을 추가할 수 있습니다. 개인적으로 개발하는 프로젝트이므로 일정은 정해지지 않았습니다.
-            <br><br>
-            문의 사항은 아래 이메일로 연락 바랍니다.<br>sliderhelp10@gmail.com
+            슬라이드는 Microsoft OneDrive에 저장되며, 직접 저장한 사용자만 접근할 수 있습니다. <br />다른 사용자나
+            개발자는 저장된 슬라이드를 볼 수 없습니다. <br /><br />
+            추후 AI를 활용한 자동 저장, 슬라이드 공유 등의 기능을 추가될 예정입니다.
+            <br /><br />
+            문의 사항은 아래 이메일로 연락 바랍니다.<br />sliderhelp10@gmail.com
           </div>
         </div>
       </div>
 
-      <!-- 업데이트 정보 페이지 추가 -->
-      <div id="updates-page" class="page">
+      <!-- 도움말 페이지 (설정) 추가 -->
+      <div id="help-page-setting" class="page">
         <div class="page-content">
           <div class="title-container">
-            <button class="back-button" id="updates-page-back">
+            <button class="back-button" id="help-page-setting-back">
               <i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
             </button>
-            <h2 class="center-title">업데이트 정보</h2>
+            <h2 class="center-title">도움말</h2>
           </div>
-          
-          <div class="version-container">
-            <div class="current-version">
-              <div class="version-label">현재 버전</div>
-              <div class="version-number">ver. 1.0</div>
-            </div>
-            <div class="version-status-container">
-              <div class="version-status">최신버전입니다</div>
-            </div>
-            <a href="#" class="download-link" id="download-link" target="_blank" style="display: none;">최신버전 다운로드</a>
+
+          <div class="help-content">
+            슬라이드는 Microsoft OneDrive에 저장되며, 직접 저장한 사용자만 접근할 수 있습니다. <br />다른 사용자나
+            개발자는 저장된 슬라이드를 볼 수 없습니다. <br /><br />
+            추후 AI를 활용한 자동 저장, 슬라이드 공유 등의 기능을 추가될 예정입니다.
+            <br /><br />
+            문의 사항은 아래 이메일로 연락 바랍니다.<br />sliderhelp10@gmail.com
           </div>
-          
-          <div class="update-history-title">업데이트 히스토리</div>
-          
+        </div>
+      </div>
+
+      <!-- 버전 정보 페이지 추가 -->
+      <div id="version-page" class="page">
+        <div class="page-content">
+          <div class="title-container">
+            <button class="back-button" id="version-page-back">
+              <i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
+            </button>
+            <h2 class="center-title">버전 정보</h2>
+          </div>
+
+          <div class="update-history-title">버전 히스토리</div>
+          <div id="update-notification" class="update-notification"></div>
+
           <div class="update-history">
             <div class="update-item">
               <div class="update-version">ver. 1.0</div>
@@ -300,13 +306,28 @@
                 <li>Microsoft 계정 연동</li>
               </ul>
             </div>
-            
-            <div class="update-item">
-              <div class="update-version">ver. 0.9 Beta</div>
-              <ul class="update-details">
-                <li>베타 버전 릴리스</li>
-                <li>기본 UI 구현</li>
-                <li>OneDrive 연동 테스트</li>
+          </div>
+        </div>
+      </div>
+
+      <!-- 업데이트 페이지 추가 -->
+      <div id="updates-page" class="page">
+        <div class="page-content">
+          <div class="logo-container">
+            <img width="120" height="120" src="../../assets/logo(korean).png" alt="MyProject" title="MyProject" />
+            <h2 class="main-title">새로운 버전이 있습니다!<br />업데이트를 진행해 주세요.</h2>
+          </div>
+
+          <div class="update-container">
+            <div class="update-message">
+              <a href="#" id="update-link">업데이트 받기</a>
+            </div>
+            <div class="update-details">
+              <h4>주요 변경사항</h4>
+              <ul id="update-details-list">
+                <li>새로운 기능 추가</li>
+                <li>성능 개선</li>
+                <li>버그 수정</li>
               </ul>
             </div>
           </div>
@@ -338,18 +359,9 @@
         if (helpLink) {
           helpLink.addEventListener("click", function (e) {
             e.preventDefault();
-            window.showPage("help-page");
+            window.showPage("help-page-main");
           });
         }
-
-        // 설정 항목에 이벤트 리스너 추가
-        const settingsItems = document.querySelectorAll(".settings-item");
-        settingsItems.forEach(item => {
-          item.addEventListener("click", function () {
-            const settingType = this.dataset.setting;
-            window.handleSettingClick(settingType);
-          });
-        });
 
         // 뒤로가기 버튼에 이벤트 리스너 추가
         document.getElementById("add-page-back").addEventListener("click", function () {

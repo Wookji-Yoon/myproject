@@ -25,12 +25,14 @@
 17. 추가하기 페이지 태그 input 높이, paddign [V}]
 18. 추가하기 페이지 장표전환도 즉시 하기 [V]
 19. To-be(로그아웃) [V]
+20. Tags json 없애기 [V]
 
-20. registerpageEventhandler 리팩토링링
-21. 정보페이지 업데이트 X로 수정
-22. Tags json 없애기
-23. Main Page에 업데이트 가리기
-24. 로고
-25. nav창 지우기
+21. registerpageEventhandler 리팩토링 [V]
+22. 정보페이지 업데이트 X로 수정 [V]
+23. Main Page에 업데이트 가리기 [V]
+25. nav창 지우기 [V]
+26. app-header를 nav바랑 updates 페이지랑 [V]
+
+24. 로고 [V]
 26. Microsoft 권한
 27. 배포
