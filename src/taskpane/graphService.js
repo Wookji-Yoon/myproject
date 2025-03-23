@@ -141,20 +141,9 @@ async function createJsonFile(filePath = "/me/drive/root:/slider/") {
 
   try {
     // 기본 JSON 구조를 exportSelectedSlideAsBase64의 출력 형식과 일치시킴
-    await client.api(filePath + "slides.json:/content").put(
-      new Blob(
-        [
-          JSON.stringify(
-            {
-              slides: [sampleDict],
-            },
-            null,
-            2
-          ),
-        ],
-        { type: "application/json" }
-      )
-    );
+    await client
+      .api(filePath + "slides.json:/content")
+      .put(new Blob([JSON.stringify(sampleDict, null, 2)], { type: "application/json" }));
 
     console.log("presentation.json created successfully");
   } catch (error) {
@@ -307,7 +296,6 @@ export {
   createJsonFile,
   readJsonFile,
   updateJsonFile,
-  createFolder,
   deleteOneSlideJsonFile,
   editJsonFile,
   isUserLoggedIn,

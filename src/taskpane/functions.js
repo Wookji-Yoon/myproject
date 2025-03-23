@@ -3,7 +3,6 @@
 import { getSelectedSlideIndex, getSelectedSlideId, setMessage, formatTagOutput } from "./utils.js";
 import {
   signIn,
-  createFolder,
   fileExists,
   createJsonFile,
   updateJsonFile,
