@@ -1,4 +1,4 @@
-/* global console, document, window */
+/* global console, document, window, location */
 
 import { tryCatch, formatTagOutput, detectKeywordsAndShowImages, setMessage, checkForUpdates } from "./utils.js";
 import { getSlideListCache, getSlideCache, getTags, clearSlideListCache } from "./state.js";
@@ -416,6 +416,14 @@ function registerCommonHandlers() {
       showPage("settings-page");
     });
     hamburgerMenu.dataset.hasListener = "true";
+  }
+
+  const refreshButton = document.getElementById("refresh-button");
+  if (refreshButton && !refreshButton.dataset.hasListener) {
+    refreshButton.addEventListener("click", function () {
+      location.reload();
+    });
+    refreshButton.dataset.hasListener = "true";
   }
 
   const settingsBackButton = document.getElementById("settings-page-back");

@@ -9,8 +9,8 @@ import {
   editJsonFile,
   deleteOneSlideJsonFile,
 } from "./graphService";
-import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache, updateSlideListCache } from "./state";
-import { showPage } from "./pages";
+import { getSlideListCache, clearSlideListCache, getSlideCache, addSlideCache, updateSlideListCache } from "./state.js";
+import { showPage } from "./pages.js";
 import { v4 as uuidv4 } from "uuid";
 
 async function exportSelectedSlideAsBase64() {
@@ -99,7 +99,7 @@ async function handleSignIn() {
   if (!exists) {
     await createJsonFile();
     setMessage(`${account.name}님으로 로그인 완료 및 프레젠테이션 JSON 파일을 생성했습니다.`);
-    showPage("list-page");
+    location.reload();
   } else {
     setMessage(`${account.name}님으로 로그인 완료. 프레젠테이션 JSON 파일이 이미 존재합니다.`);
     showPage("list-page");
@@ -111,6 +111,7 @@ async function handleSignIn() {
  * @param {Array} slides 표시할 슬라이드 배열
  */
 function displaySlides(slides) {
+  console.log(slides);
   const container = document.getElementById("slides-container");
   container.innerHTML = "";
 
@@ -370,7 +371,8 @@ async function handleDeleteIconClick(event) {
 
   // 슬라이드 캐시 삭제
   await updateSlideListCache(slideId);
-  displaySlides(await getSlideListCache().slides);
+  const slideCache = await getSlideListCache();
+  displaySlides(slideCache.slides);
 
   try {
     // 백엔드에서 슬라이드 삭제 시도
