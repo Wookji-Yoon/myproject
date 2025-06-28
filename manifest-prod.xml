@@ -2,7 +2,7 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
   <Id>e63cdf73-91cd-4534-96f0-5862e5e31029</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Slider</ProviderName>
+  <ProviderName>Wookji Yoon</ProviderName>
   <DefaultLocale>ko-KR</DefaultLocale>
   <DisplayName DefaultValue="장표관리자 Slider"/>
   <Description DefaultValue="장표를 관리하는 가장 효율적인 도구"/>

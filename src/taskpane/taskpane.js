@@ -34,7 +34,7 @@ window.handleTagSearch = handleTagSearch;
 window.handleInsertSlide = handleInsertSlide;
 
 Office.onReady((info) => {
-  if (info.host === Office.HostType.PowerPoint && info.platform === Office.PlatformType.PC) {
+  if (info.host === Office.HostType.PowerPoint) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
 
